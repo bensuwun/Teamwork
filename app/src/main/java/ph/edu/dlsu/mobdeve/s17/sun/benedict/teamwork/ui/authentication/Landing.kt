@@ -1,19 +1,18 @@
-package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork
+package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentLandingBinding
 
 /**
  * A simple [Fragment] subclass.
  */
-class LandingFragment : Fragment() {
+class Landing : Fragment() {
 
     lateinit var binding: FragmentLandingBinding
     override fun onCreateView(

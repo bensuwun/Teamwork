@@ -1,7 +1,8 @@
-package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork
+package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 
 class MainActivity : AppCompatActivity() {
 

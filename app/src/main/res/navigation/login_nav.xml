@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav"
-    app:startDestination="@id/landingFragment">
+    app:startDestination="@id/landing">
 
     <fragment
-        android:id="@+id/landingFragment"
-        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.LandingFragment"
+        android:id="@+id/landing"
+        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication.Landing"
         android:label="fragment_landing"
         tools:layout="@layout/fragment_landing" >
         <action
@@ -17,19 +17,28 @@
             app:exitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/navigateToLogin"
-            app:destination="@id/loginFragment"
+            app:destination="@id/login"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <fragment
         android:id="@+id/register"
-        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.Register"
+        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication.Register"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.LoginFragment"
+        android:id="@+id/login"
+        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication.Login"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login"/>
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/navigateToHome"
+            app:destination="@id/homeActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.HomeActivity"
+        android:label="activity_home"
+        tools:layout="@layout/activity_home" />
 </navigation>
