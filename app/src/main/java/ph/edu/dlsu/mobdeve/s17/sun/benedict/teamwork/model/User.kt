@@ -1,5 +1,6 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model
 
+import com.google.firebase.firestore.DocumentReference
 import java.io.Serializable
 
 /**
@@ -21,8 +22,8 @@ data class User(val username: String, val emailAddress: String) : Serializable {
     // Getters and setters defined here by Kotlin's get/set features
     var userId: String = ""
     var profileImageUri: String = ""
-    var projects: ArrayList<Project> = ArrayList()
-    var tasks: ArrayList<Task> = ArrayList()
+    var projectReferences: ArrayList<DocumentReference> = ArrayList()
+    var taskReferences: ArrayList<DocumentReference> = ArrayList()
 
     // The value of this instance attribute cannot be extracted.
     var password: String = ""
@@ -37,11 +38,11 @@ data class User(val username: String, val emailAddress: String) : Serializable {
      * @param tasks - A Java ArrayList containing task instances.
      */
     constructor(userId: String, username: String, emailAddress: String, profileImageUri: String,
-                projects: ArrayList<Project>, tasks: ArrayList<Task>): this(username, emailAddress) {
+                projects: ArrayList<DocumentReference>, tasks: ArrayList<DocumentReference>): this(username, emailAddress) {
         this.userId = userId
         this.profileImageUri = profileImageUri
-        this.projects = projects
-        this.tasks = tasks
+        this.projectReferences = projects
+        this.taskReferences = tasks
     }
 
     /**

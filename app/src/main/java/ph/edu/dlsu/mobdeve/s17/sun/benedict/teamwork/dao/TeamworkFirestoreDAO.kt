@@ -60,7 +60,7 @@ abstract class TeamworkFirestoreDAO() {
             .get()
             .addOnCompleteListener { document ->
                 val data = document.result
-                if(data != null) {
+                if(data != null && document.isSuccessful) {
                     Log.d(ContentValues.TAG, "Got document!")
                     val dataObject = parseDocument(data)
                     this.document = dataObject
@@ -85,7 +85,7 @@ abstract class TeamworkFirestoreDAO() {
                     Log.d(ContentValues.TAG, "Document added.")
                     callback(true, documentReference.result?.id)
                 } else {
-                    Log.d(ContentValues.TAG, "Document add failed.")
+                    Log.e(ContentValues.TAG, "Document add failed.")
                     callback(false, null)
                 }
             }
