@@ -15,4 +15,13 @@
     <string name="tasks">Tasks</string>
     <string name="guilds">Guilds</string>
     <string name="settings">Settings</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_guilds_prompt">You don\' t seem to \nhave a guild ...</string>
+    <string name="join_guild_prompt">Join one?</string>
+    <string name="search_guilds_btn">SEARCH GUILDS</string>
+    <string name="sample_guild_name">Google Firebase PH</string>
+    <string name="sample_member_count">Members: 4,212</string>
+    <string name="join_guild">JOIN</string>
+    <string name="desc_dummy_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation . . .</string>
 </resources>

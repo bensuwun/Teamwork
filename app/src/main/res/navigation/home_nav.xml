@@ -13,10 +13,19 @@
         android:id="@+id/guildsFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.Guilds"
         android:label="Guilds"
-        tools:layout="@layout/fragment_guilds" />
+        tools:layout="@layout/fragment_guilds" >
+        <action
+            android:id="@+id/navigateToMyGuildsEmpty"
+            app:destination="@id/myGuildsEmpty" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.Settings"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/myGuildsEmpty"
+        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.MyGuildsEmpty"
+        android:label="fragment_my_guilds_empty"
+        tools:layout="@layout/fragment_my_guilds_empty" />
 </navigation>

@@ -36,7 +36,6 @@ class UserDAO {
         this.userHashMap.put("profileImage", this.profileImage)
         this.userHashMap.put("projects", this.projects)
         this.userHashMap.put("tasks", this.tasks)
-
         return this.userHashMap
     }
 
