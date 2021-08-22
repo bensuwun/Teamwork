@@ -1,4 +1,4 @@
-package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.model
+package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model
 
 import java.io.Serializable;
 

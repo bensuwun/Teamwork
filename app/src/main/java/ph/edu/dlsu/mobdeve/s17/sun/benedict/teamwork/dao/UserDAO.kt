@@ -1,9 +1,9 @@
-package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.dao
+package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao
 
 import com.google.firebase.firestore.FirebaseFirestore
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.model.Project
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.model.Task
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.model.User
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Project
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.User
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -17,7 +17,7 @@ class UserDAO {
 
     private val fireStoreDB = FirebaseFirestore.getInstance()
     private val fireStoreCollection = "users"
-    private val queryResults = ArrayList<User>();
+    val queryResults = ArrayList<User>();
 
     // Instance attributes
     private var userHashMap: HashMap<String, Any> = HashMap()
@@ -45,14 +45,21 @@ class UserDAO {
         return this.userHashMap
     }
 
-    // Parse HashMap
-    fun parseHashMap() {
-
+    // Firestore Operations
+    fun getUserById() {
+        // TODO
     }
 
-    // Firestore Operations
-    fun getUserById(): User {
+    fun createNewUser() {
+        // TODO
+    }
 
+    fun deleteUser() {
+        // TODO
+    }
+
+    fun updateUser() {
+        // TODO
     }
 
 
