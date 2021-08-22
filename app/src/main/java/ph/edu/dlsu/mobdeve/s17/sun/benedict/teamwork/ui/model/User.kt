@@ -1,5 +1,7 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.model
 
+import java.io.Serializable;
+
 /**
  * This is the User data class, where an instance of a user is stored.
  * @author Adriel Isaiah V. Amoguis
@@ -13,7 +15,7 @@ package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.model
  * @param username - The username of the user.
  * @param emailAddress - The user's email address.
  */
-data class User(val username: String, val emailAddress: String) {
+data class User(val username: String, val emailAddress: String) : Serializable {
 
     /**
      * This constructor is used when generating user instances from the User Data Access Object.
@@ -25,5 +27,5 @@ data class User(val username: String, val emailAddress: String) {
 
     // Instance attributes
 
-    
+
 }
