@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "225389906201",
+    "project_id": "mobdeve-teamwork",
+    "storage_bucket": "mobdeve-teamwork.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225389906201:android:061fd5952c260750429d88",
+        "android_client_info": {
+          "package_name": "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "225389906201-euelguhorqfvo2gga9hpue4du8thn2tc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork",
+            "certificate_hash": "cccb2bd1dfb9ea5edf946a2f0a42aeea412d8bf8"
+          }
+        },
+        {
+          "client_id": "225389906201-3kt0ihulohcc35g0ehp0d33b7364udh3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0w-gnCAl_KEWPP4jgfKu89Pv9ULBJiX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "225389906201-3kt0ihulohcc35g0ehp0d33b7364udh3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
