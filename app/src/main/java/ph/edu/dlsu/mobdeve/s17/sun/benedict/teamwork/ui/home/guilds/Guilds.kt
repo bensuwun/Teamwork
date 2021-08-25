@@ -10,7 +10,7 @@ import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentGuildsBinding
 
 /**
- * A simple [Fragment] subclass.
+ * Main fragment displayed in HomeActivity. Displays the My Guilds and Search Guilds buttons.
  */
 class Guilds : Fragment() {
     private lateinit var binding : FragmentGuildsBinding
@@ -30,11 +30,15 @@ class Guilds : Fragment() {
     }
 
     private fun setEventHandlers(view: View){
-        binding.ivMyGuilds.setOnClickListener {
+        binding.mcvMyGuilds.setOnClickListener {
             // If user does not have guilds
-            view.findNavController().navigate(R.id.navigateToMyGuildsEmpty)
+            // view.findNavController().navigate(R.id.navigateToMyGuildsEmpty)
 
             // Else
+            view.findNavController().navigate(R.id.navigateToMyGuilds)
+        }
+        binding.mcvSearchGuilds.setOnClickListener {
+            view.findNavController().navigate(R.id.navigateToSearchGuilds)
         }
 
     }

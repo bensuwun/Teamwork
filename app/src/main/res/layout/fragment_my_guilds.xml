@@ -6,7 +6,7 @@
     tools:context=".ui.home.guilds.SearchGuilds">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search_guilds"
+        android:id="@+id/rv_my_guilds"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -2,12 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".ui.home.guilds.SearchGuilds">
+    android:layout_height="match_parent"
+    tools:context=".ui.home.Projects">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search_guilds"
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:text="@string/hello_blank_fragment" />
 
 </FrameLayout>

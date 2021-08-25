@@ -21,6 +21,8 @@
     <string name="search_guilds_btn">SEARCH GUILDS</string>
     <string name="sample_guild_name">Google Firebase PH</string>
     <string name="sample_member_count">Members: 4,212</string>
-    <string name="join_guild">JOIN</string>
+    <string name="join_guild_btn">JOIN</string>
+    <string name="leave_guild_btn">LEAVE</string>
     <string name="desc_dummy_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation . . .</string>
+    <string name="projects">Projects</string>
 </resources>
