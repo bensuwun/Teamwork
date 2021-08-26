@@ -10,16 +10,33 @@ import java.util.ArrayList
  * This abstract data access object is responsible for reading and writing data
  * from the FireStore database.
  *
+ * This class abstracts most of the client-db communication. To use it, simply
+ * extend it to your own DAO, then implement the needed abstract functions.
+ *
  * @author Adriel Isaiah V. Amoguis
  */
 abstract class TeamworkFirestoreDAO() {
 
     // Firestore
     private val fireStoreDB = FirebaseFirestore.getInstance()
+
+    /**
+     * The collection name that will be used to query the Firestore database.
+     */
     abstract val fireStoreCollection: String
 
     // Query Results
+    /**
+     * An ArrayList where results will be stored if the query returns multiple documents.
+     */
     abstract var queryResults: ArrayList<Any>
+
+    /**
+     * The instance of the object that this DAO represents. This DAO can be replaced with
+     * the object that will be used to update or delete a document in the Firestore database.
+     * Furthermore, this is also where the result is stored after executing a query that returns
+     * a single document from Firestore.
+     */
     abstract var document: Any?
 
     // Abstract Constructor
