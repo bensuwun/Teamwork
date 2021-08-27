@@ -31,18 +31,7 @@ class MainActivity : AppCompatActivity() {
         val currentUser: FirebaseUser? = this.fbAuth.currentUser
         if(currentUser != null && !currentUser.isAnonymous && currentUser.isEmailVerified) {
             // Skip login/register page
-            val homeActivityIntent = Intent(this, HomeActivity::class.java).apply {
-                val userDAO = UserDAO()
-                userDAO.getUserByAuthId(currentUser.uid) { success ->
-                    if(success) {
-                        putExtra("userData", userDAO.document as User)
-                        putExtra("hasUserData", true)
-                    } else {
-                        putExtra("hasUserData", false)
-                    }
-                }
-            }
-            startActivity(homeActivityIntent)
+            startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
         else {
