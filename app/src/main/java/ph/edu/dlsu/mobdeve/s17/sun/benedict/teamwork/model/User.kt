@@ -26,7 +26,7 @@ data class User(val username: String, val emailAddress: String) : Serializable {
     var taskReferences: ArrayList<DocumentReference> = ArrayList()
 
     // The value of this instance attribute cannot be extracted.
-    var password: String = ""
+    var authId: String = ""
 
     /**
      * This constructor is used when generating user instances from the User Data Access Object.
@@ -37,22 +37,23 @@ data class User(val username: String, val emailAddress: String) : Serializable {
      * @param projects - A Java ArrayList containing project instances.
      * @param tasks - A Java ArrayList containing task instances.
      */
-    constructor(userId: String, username: String, emailAddress: String, profileImageUri: String,
+    constructor(userId: String, username: String, emailAddress: String, profileImageUri: String, authId: String,
                 projects: ArrayList<DocumentReference>, tasks: ArrayList<DocumentReference>): this(username, emailAddress) {
         this.userId = userId
         this.profileImageUri = profileImageUri
         this.projectReferences = projects
         this.taskReferences = tasks
+        this.authId = authId
     }
 
     /**
      * This constructor is used when creating a new user.
      * @param username - The user's username when creating an account.
      * @param emailAddress - The user's email address.
-     * @param password - The user's password.
+     * @param authId - The user's auth ID from Firestore.
      */
-    constructor(username: String, emailAddress: String, password: String): this(username, emailAddress) {
-        this.password = password
+    constructor(username: String, emailAddress: String, authId: String): this(username, emailAddress) {
+        this.authId = authId
     }
 
     override fun toString(): String {

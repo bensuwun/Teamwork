@@ -1,6 +1,7 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,7 +19,7 @@ import java.util.ArrayList
 abstract class TeamworkFirestoreDAO() {
 
     // Firestore
-    private val fireStoreDB = FirebaseFirestore.getInstance()
+    protected val fireStoreDB = FirebaseFirestore.getInstance()
 
     /**
      * The collection name that will be used to query the Firestore database.
@@ -85,6 +86,35 @@ abstract class TeamworkFirestoreDAO() {
                     callback(true)
                 } else {
                     Log.d(ContentValues.TAG, "Document not found.")
+                    callback(false)
+                }
+            }
+    }
+
+    /**
+     * Get Document By Field Value
+     * @description Searches the Firestore database for any documents that match the query parameters. Returns the results
+     * to the queryResults ArrayList of this class.
+     * @param fieldName A string-key of the field to test.
+     * @param fieldValue The value to be matched.
+     * @param callback A callback function that takes in the `success` parameter as a boolean.
+     */
+    fun getDocumentsByFieldValue(fieldName: String, fieldValue: Any, callback: (success: Boolean) -> Unit) {
+        fireStoreDB.collection(fireStoreCollection)
+            .whereEqualTo(fieldName, fieldValue)
+            .get()
+            .addOnCompleteListener { taskQuery ->
+                if(taskQuery.isSuccessful) {
+                    Log.d(
+                        TAG,
+                        "Got the document(s) using field name $fieldName with a value of $fieldValue"
+                    )
+                    taskQuery.result?.iterator()?.forEach {
+                        this.queryResults.add(this.parseDocument(it))
+                    }
+                    callback(true)
+                } else {
+                    Log.e(TAG, "Unable to get document using field $fieldName with value $fieldValue.")
                     callback(false)
                 }
             }
