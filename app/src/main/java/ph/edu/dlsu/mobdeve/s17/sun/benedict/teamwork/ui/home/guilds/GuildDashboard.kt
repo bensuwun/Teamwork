@@ -1,10 +1,12 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentGuildDashboardBinding
 
@@ -26,13 +28,13 @@ class GuildDashboard : Fragment() {
         return view
     }
 
-    private fun setEventHandlers(view: View){
+    private fun setEventHandlers(view : View){
         binding.mcvGuildProfile.setOnClickListener {
-
+            view.findNavController().navigate(R.id.navigateToGuildProfileActivity)
         }
 
         binding.mcvGuildPosts.setOnClickListener {
-
+            view.findNavController().navigate(R.id.navigateToGuildPostsActivity)
         }
 
         binding.mcvGuildChallenges.setOnClickListener {

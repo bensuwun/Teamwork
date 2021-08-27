@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_post"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+    <!-- For DP | Name/Member Count | Button -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="12">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/siv_user_dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="1dp"
+                android:src="@drawable/my_guilds_empty"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/black"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded" />
+
+            <!-- Name/Date -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_marginStart="10dp"
+                android:layout_weight="12">
+
+                <TextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="redstoneadi"
+                    android:layout_marginBottom="8dp"
+                    style="@style/username" />
+
+                <TextView
+                    android:id="@+id/tv_date_posted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Posted 1m ago"
+                    style="@style/guild_description" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_tags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_support"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipBackgroundColor="@color/app_lightest_blue"
+                android:text="Support"
+                style="@style/chip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_social"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipBackgroundColor="@color/app_light_blue"
+                android:text="Social"
+                style="@style/chip" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_challenge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipBackgroundColor="@color/app_yellow"
+                android:text="Challenge"
+                style="@style/chip"/>
+        </com.google.android.material.chip.ChipGroup>
+        <TextView
+            android:id="@+id/tv_post_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/guild_post_title"
+            android:text="Difficulty with Pushups"/>
+        <TextView
+            android:id="@+id/tv_post_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/guild_post_dummy_text"
+            />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|start">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_like_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_outline_favorite_border_24"/>
+            <TextView
+                android:layout_marginLeft="2dp"
+                android:id="@+id/tv_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_comment_icon"
+                android:layout_marginLeft="15dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:paddingTop="1dp"
+                android:src="@drawable/ic_baseline_comment_24"/>
+            <TextView
+                android:layout_marginLeft="2dp"
+                android:id="@+id/tv_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

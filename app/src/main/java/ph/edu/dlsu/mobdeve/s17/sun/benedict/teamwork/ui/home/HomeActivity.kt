@@ -2,6 +2,7 @@ package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -19,6 +20,10 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Set toolbar
+        val toolbar : Toolbar = findViewById(R.id.tb_home)
+        setSupportActionBar(toolbar)
 
         val bottomNavView = binding.bottomNavigationView
 
