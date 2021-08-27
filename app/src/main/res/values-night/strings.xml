@@ -16,4 +16,14 @@
     <string name="tasks">Tasks</string>
     <string name="guilds">Guilds</string>
     <string name="settings">Settings</string>
+    <string name="no_guilds_prompt">You don\'t seem to \nhave a guild ...</string>
+    <string name="join_guild_prompt">Join one?</string>
+    <string name="search_guilds_btn">SEARCH GUILDS</string>
+    <string name="sample_guild_name">Google Firebase PH</string>
+    <string name="sample_member_count">Members: 4,212</string>
+    <string name="join_guild_btn">JOIN</string>
+    <string name="leave_guild_btn">LEAVE</string>
+    <string name="desc_dummy_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation . . .</string>
+    <string name="projects">Projects</string>
+    <string name="guild_post_dummy_text">I want to somehow be as strong as Saitama, he’s my biggest idol! But I can’t seem to do push-ups properly, any tips?</string>
 </resources>

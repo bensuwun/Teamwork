@@ -17,20 +17,21 @@
 
         <!-- Per Image -->
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="wrap_content"
+            android:id="@+id/mcv_my_guilds"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             app:cardCornerRadius="20dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/iv_my_guilds"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="340dp"
+                    android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:adjustViewBounds="true"
                     android:src="@drawable/my_guilds_img"
@@ -38,13 +39,13 @@
                     />
 
                 <TextView
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/iv_my_guilds"
+                    app:layout_constraintEnd_toEndOf="@id/iv_my_guilds"
                     app:layout_constraintTop_toBottomOf="@id/iv_my_guilds"
                     android:gravity="center"
                     android:padding="8dp"
                     android:background="@color/app_orange"
-                    android:layout_width="340dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:fontFamily="serif-monospace"
                     android:textAllCaps="true"
@@ -58,19 +59,20 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="wrap_content"
+            android:id="@+id/mcv_search_guilds"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="20dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/iv_guilds_list"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="340dp"
+                    android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:adjustViewBounds="true"
                     android:src="@drawable/search_guilds_img"
@@ -78,13 +80,13 @@
                     />
 
                 <TextView
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/iv_guilds_list"
+                    app:layout_constraintEnd_toEndOf="@id/iv_guilds_list"
                     app:layout_constraintTop_toBottomOf="@id/iv_guilds_list"
                     android:gravity="center"
                     android:padding="8dp"
                     android:background="@color/app_orange"
-                    android:layout_width="340dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:fontFamily="serif-monospace"
                     android:textAllCaps="true"

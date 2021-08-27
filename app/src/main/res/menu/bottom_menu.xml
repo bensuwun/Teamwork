@@ -4,11 +4,15 @@
     <item
         android:id="@+id/tasksFragment"
         android:title="@string/tasks"
-        android:icon="@drawable/ic_baseline_home_24" />
+        android:icon="@drawable/ic_tasks" />
+    <item
+        android:id="@+id/projectsFragment"
+        android:title="@string/projects"
+        android:icon="@drawable/ic_projects" />
     <item
         android:id="@+id/guildsFragment"
         android:title="@string/guilds"
-        android:icon="@drawable/ic_baseline_dashboard_24"/>
+        android:icon="@drawable/ic_guilds"/>
     <item
         android:id="@+id/settingsFragment"
         android:title="@string/settings"

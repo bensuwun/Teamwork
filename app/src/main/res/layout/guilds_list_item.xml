@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- For DP | Name/Member Count | Button -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="12">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/siv_guild_dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="1dp"
+                android:src="@drawable/my_guilds_empty"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/black"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded" />
+            
+            <!-- Name/Member Count -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_marginStart="10dp"
+                android:layout_weight="12">
+
+                <TextView
+                    android:id="@+id/tv_guild_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sample_guild_name"
+                    android:layout_marginBottom="8dp"
+                    style="@style/guild_name"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_member_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sample_member_count"
+                    style="@style/guild_description" />
+                
+                
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mbtn_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/join_guild_btn"
+                android:insetTop="10dp"
+                android:insetBottom="10dp"
+                android:insetLeft="5dp"
+                android:insetRight="5dp"
+                app:cornerRadius="25dp"
+                android:layout_gravity="center" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <TextView
+            android:id="@+id/tv_guild_description"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/guild_description"
+            android:text="@string/desc_dummy_text"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
