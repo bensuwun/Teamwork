@@ -28,10 +28,4 @@
     <string name="projects">Projects</string>
     <string name="guild_post_dummy_text">I want to somehow be as strong as Saitama, he’s my biggest idol! But I can’t seem to do push-ups properly, any tips?</string>
 
-    <!--
-        This value is temporary. There is an issue with Gradle-Firebase with this attribute injection.
-        This is a temporary fix.
-     -->
-    <string name="default_web_client_id">225389906201-3kt0ihulohcc35g0ehp0d33b7364udh3.apps.googleusercontent.com</string>
-
 </resources>

@@ -65,5 +65,4 @@ class Login : Fragment() {
         }
         return view
     }
-
 }
