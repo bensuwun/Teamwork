@@ -6,14 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.UserDAO
-import kotlinx.coroutines.tasks.await
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.User
 
 class MainActivity : AppCompatActivity() {
