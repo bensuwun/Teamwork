@@ -1,6 +1,7 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import com.google.firebase.auth.FirebaseUser
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.UserDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.User
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.HomeActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,15 +28,13 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val currentUser: FirebaseUser? = this.fbAuth.currentUser
-        if(currentUser != null) {
+        if(currentUser != null && !currentUser.isAnonymous && currentUser.isEmailVerified) {
             // Skip login/register page
-            // Skip this activity
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
         }
-        val userDAO = UserDAO()
-        val lambda = { _: Boolean ->
-            val user = userDAO.document as User
-            Toast.makeText(applicationContext, user.toString(), Toast.LENGTH_LONG).show()
+        else {
+            Toast.makeText(applicationContext, "Not logged in", Toast.LENGTH_LONG).show()
         }
-        userDAO.getDocumentById("KZpVJ7lrdSO2DMSpm9nK", lambda)
     }
 }

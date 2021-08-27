@@ -1,7 +1,11 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
 import org.w3c.dom.Document
 import java.util.*
 import kotlin.collections.HashMap
@@ -21,6 +25,36 @@ class UserDAO(): TeamworkFirestoreDAO() {
     override var document: Any? = null
 
     /**
+     * Get User By Auth Id
+     * @description This method is used to get the user data based on the user's Firebase auth ID.
+     * @param authId The user's Firebase Auth ID
+     * @param callback A callback function that takes in the `success` parameter as a boolean.
+     */
+    fun getUserByAuthId(authId: String, callback: (success: Boolean) -> Unit) {
+        this.getDocumentsByFieldValue("authId", authId) { success ->
+            if(success) {
+                when {
+                    (this.queryResults.size == 1) -> {
+                        this.document = this.queryResults[0]
+                        callback(true)
+                    }
+                    (this.queryResults.size > 1) -> {
+                        Log.e(
+                            TAG,
+                            "For some reason, a single authId returned more than one user, this is morbidly wrong!"
+                        )
+                        callback(false)
+                    }
+                    else -> {
+                        Log.d(TAG, "No user was found with that specific authId.")
+                        callback(false)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Build Hash Map
      * @description This method generates the Java HashMap that firebase expects
      * as the document for the firestore database.
@@ -28,9 +62,8 @@ class UserDAO(): TeamworkFirestoreDAO() {
      */
     override fun buildHashMap(): HashMap<String, Any> {
         val userMap = HashMap<String, Any>()
-        (document as User)?.let { userMap.put("username", it.username) }
-        (document as User)?.let { userMap.put("emailAddress", it.emailAddress) }
-        (document as User)?.let { userMap.put("profileImage", it.profileImageUri) }
+        (document as User).let { userMap.put("username", it.username) }
+        (document as User).let { userMap.put("profileImage", it.profileImageUri) }
 
         return userMap
     }
@@ -44,7 +77,7 @@ class UserDAO(): TeamworkFirestoreDAO() {
      */
     override fun parseDocument(document: DocumentSnapshot): User {
 
-        // Convert the Arrays of Reference Fields in to Actual ArrayLists
+        // Convert the Arrays of Reference Fields into Actual ArrayLists
         val projectReferences = ArrayList<DocumentReference>()
         val taskReferences = ArrayList<DocumentReference>()
 
@@ -61,6 +94,7 @@ class UserDAO(): TeamworkFirestoreDAO() {
             document["username"] as String,
             document["emailAddress"] as String,
             document["profileImage"] as String,
+            document["authId"] as String,
             projectReferences,
             taskReferences
         )
