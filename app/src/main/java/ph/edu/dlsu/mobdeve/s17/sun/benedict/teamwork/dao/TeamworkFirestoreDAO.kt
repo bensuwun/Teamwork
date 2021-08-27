@@ -69,7 +69,8 @@ abstract class TeamworkFirestoreDAO() {
     /**
      * Get Document By Id
      * @descrption Returns a document to this DAO based on a given user documentID.
-     * @return Task coroutine that resolves once the user data is available.
+     * @param documentId The Firestore documentId of the document as a String.
+     * @param callback A callback function that takes in the `success` parameter as a boolean.
      */
     fun getDocumentById(documentId: String, callback: (success: Boolean) -> Unit) {
         fireStoreDB.collection(fireStoreCollection)
@@ -92,6 +93,7 @@ abstract class TeamworkFirestoreDAO() {
     /**
      * Create New Document
      * @description This method creates a new document entry in the Firestore database.
+     * @param callback A callback function that takes in the `success` parameter as a boolean.
      */
     fun createNewDocument(callback: (success: Boolean, documentId: String?) -> Unit) {
         val dataMapping = this.buildHashMap()
@@ -108,11 +110,46 @@ abstract class TeamworkFirestoreDAO() {
             }
     }
 
-    fun deleteDocument() {
-        // TODO
+    /**
+     * Delete Document
+     * @param documentId The Firestore documentId of the document as a String.
+     * @param callback A callback function that takes in the `success` parameter as a boolean.
+     * @description This method deletes a document given its documentId.
+     */
+    fun deleteDocument(documentId: String, callback: (success: Boolean) -> Unit) {
+        fireStoreDB.collection(fireStoreCollection)
+            .document(documentId)
+            .delete()
+            .addOnCompleteListener { taskStatus ->
+                if(taskStatus.isSuccessful) {
+                    Log.d(ContentValues.TAG, "Document Deleted.")
+                    callback(true)
+                } else {
+                    Log.e(ContentValues.TAG, "Document Delete Failed")
+                    callback(false)
+                }
+            }
     }
 
-    fun updateDocument() {
-        // TODO
+    /**
+     * Update Document
+     * @param documentId The Firestore documentId of the document as a String.
+     * @param callback A callback function that takes in the `success` parameter as a boolean.
+     * @description This method updates the document on Firestore based on the Document object this class has.
+     */
+    fun updateDocument(documentId: String, callback: (success: Boolean) -> Unit) {
+        val dataMapping = this.buildHashMap()
+        fireStoreDB.collection(fireStoreCollection)
+            .document(documentId)
+            .update(dataMapping)
+            .addOnCompleteListener { taskStatus ->
+                if(taskStatus.isSuccessful) {
+                    Log.d(ContentValues.TAG, "Document Updated.")
+                    callback(true)
+                } else {
+                    Log.e(ContentValues.TAG, "Document Update Failed.")
+                    callback(false)
+                }
+            }
     }
 }
