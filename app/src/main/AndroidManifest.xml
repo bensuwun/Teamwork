@@ -12,7 +12,8 @@
         <activity android:name=".ui.home.guilds.GuildPosts"></activity>
         <activity android:name=".ui.home.guilds.GuildProfileActivity" />
         <activity android:name=".ui.home.HomeActivity" />
-        <activity android:name=".ui.authentication.MainActivity">
+        <activity android:name=".ui.authentication.MainActivity"
+                    android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
