@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageHelper
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
@@ -43,6 +45,10 @@ class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: 
             holder.iv_like_icon.setImageResource(R.drawable.ic_outline_favorite_border_24)
             */
         }
+        holder.post_container.setOnClickListener(){
+            // View post
+            holder.post_container.findNavController().navigate(R.id.navigateToViewPost)
+        }
 
 
     }
@@ -50,7 +56,7 @@ class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: 
     override fun getItemCount() = posts.size
 
     class GuildPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var cl_post : ConstraintLayout      // Main Container
+        var post_container : LinearLayoutCompat      // Main Container
         var tv_username : TextView
         var tv_date_posted : TextView
         var siv_user_dp : ShapeableImageView
@@ -62,7 +68,7 @@ class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: 
         var tv_comments: TextView
 
         init {
-            cl_post = view.findViewById(R.id.cl_post)
+            post_container = view.findViewById(R.id.post_container)
             tv_username = view.findViewById(R.id.tv_username)
             tv_date_posted = view.findViewById(R.id.tv_date_posted)
             siv_user_dp = view.findViewById(R.id.siv_user_dp)

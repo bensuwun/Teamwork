@@ -10,6 +10,7 @@
     <include
         android:id="@+id/tb_home"
         layout="@layout/toolbar_home"/>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"

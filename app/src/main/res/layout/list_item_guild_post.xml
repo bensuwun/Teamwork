@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cl_post"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/post_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +45,7 @@
                     android:id="@+id/tv_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="redstoneadi"
+                    android:text="@string/sample_username"
                     android:layout_marginBottom="8dp"
                     style="@style/username" />
 
@@ -53,7 +53,7 @@
                     android:id="@+id/tv_date_posted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Posted 1m ago"
+                    android:text="@string/sample_date_posted"
                     style="@style/guild_description" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="@color/app_lightest_blue"
-                android:text="Support"
+                android:text="@string/chip_support"
                 style="@style/chip" />
 
             <com.google.android.material.chip.Chip
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="@color/app_light_blue"
-                android:text="Social"
+                android:text="@string/chip_social"
                 style="@style/chip" />
 
             <com.google.android.material.chip.Chip
@@ -84,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="@color/app_yellow"
-                android:text="Challenge"
+                android:text="@string/chip_challenge"
                 style="@style/chip"/>
         </com.google.android.material.chip.ChipGroup>
         <TextView
@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/guild_post_title"
-            android:text="Difficulty with Pushups"/>
+            android:text="@string/sample_post_title"/>
         <TextView
             android:id="@+id/tv_post_description"
             android:layout_width="wrap_content"
@@ -112,7 +112,7 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_outline_favorite_border_24"/>
             <TextView
-                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
                 android:id="@+id/tv_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -120,13 +120,13 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_comment_icon"
-                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:paddingTop="1dp"
                 android:src="@drawable/ic_baseline_comment_24"/>
             <TextView
-                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
                 android:id="@+id/tv_comments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

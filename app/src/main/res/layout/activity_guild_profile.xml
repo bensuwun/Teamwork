@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.guilds.GuildProfileActivity">
+    tools:context=".ui.home.guilds.profile.GuildProfileActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/guild_appBarLayout"
@@ -33,7 +33,8 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/tb_profile"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"/>
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -108,6 +109,6 @@
         app:layout_anchor="@id/guild_appBarLayout"
         app:layout_anchorGravity="start|bottom"
         app:layout_collapseMode="pin"
-        android:layout_marginLeft="20dp"/>
+        android:layout_marginStart="20dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

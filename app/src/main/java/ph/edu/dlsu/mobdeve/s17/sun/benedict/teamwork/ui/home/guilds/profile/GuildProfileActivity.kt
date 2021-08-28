@@ -1,7 +1,8 @@
-package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds
+package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.appbar.AppBarLayout
@@ -19,6 +20,8 @@ class GuildProfileActivity : AppCompatActivity() {
 
         val toolbar : Toolbar = findViewById(R.id.tb_profile)
         setSupportActionBar(toolbar)
+        // Display up button from previous fragment
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setEventHandlers()
     }
@@ -38,5 +41,16 @@ class GuildProfileActivity : AppCompatActivity() {
                 isShow = false
             }
         })
+    }
+
+    // Override the up button to go back to previous calling fragment
+    override fun onOptionsItemSelected(item : MenuItem) : Boolean {
+        super.onOptionsItemSelected(item)
+
+        when (item.itemId) {
+            android.R.id.home -> finish()
+        }
+
+        return true
     }
 }

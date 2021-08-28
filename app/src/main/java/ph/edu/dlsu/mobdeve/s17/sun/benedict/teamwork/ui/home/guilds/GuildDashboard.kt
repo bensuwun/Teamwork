@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentGuildDashboardBinding
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.posts.GuildPostsActivity
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.profile.GuildProfileActivity
 
 /**
  * A simple [Fragment] subclass.
@@ -30,11 +32,11 @@ class GuildDashboard : Fragment() {
 
     private fun setEventHandlers(view : View){
         binding.mcvGuildProfile.setOnClickListener {
-            view.findNavController().navigate(R.id.navigateToGuildProfileActivity)
+            startActivity(Intent(activity, GuildProfileActivity::class.java))
         }
 
         binding.mcvGuildPosts.setOnClickListener {
-            view.findNavController().navigate(R.id.navigateToGuildPostsActivity)
+            startActivity(Intent(activity, GuildPostsActivity::class.java))
         }
 
         binding.mcvGuildChallenges.setOnClickListener {
