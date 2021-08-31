@@ -1,6 +1,5 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -20,6 +19,7 @@ import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.User
  */
 class UserDAO(): TeamworkFirestoreDAO() {
 
+    private val TAG = "UserDAO"
     override val fireStoreCollection: String = "users"
     override var queryResults: ArrayList<Any> = ArrayList()
     override var document: Any? = null
@@ -31,7 +31,7 @@ class UserDAO(): TeamworkFirestoreDAO() {
      * @param callback A callback function that takes in the `success` parameter as a boolean.
      */
     fun getUserByAuthId(authId: String, callback: (success: Boolean) -> Unit) {
-        this.getDocumentsByFieldValue("authId", authId) { success ->
+        this.getDocumentsByFieldValue("authUid", authId) { success ->
             if(success) {
                 when {
                     (this.queryResults.size == 1) -> {
@@ -92,9 +92,8 @@ class UserDAO(): TeamworkFirestoreDAO() {
         return User(
             document.id,
             document["username"] as String,
-            document["emailAddress"] as String,
             document["profileImage"] as String,
-            document["authId"] as String,
+            document["authUid"] as String,
             projectReferences,
             taskReferences
         )

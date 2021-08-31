@@ -1,7 +1,6 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,6 +16,9 @@ import java.util.ArrayList
  * @author Adriel Isaiah V. Amoguis
  */
 abstract class TeamworkFirestoreDAO() {
+
+    // TAG
+    private val TAG = "TeamworkFirestoreDAO"
 
     // Firestore
     protected val fireStoreDB = FirebaseFirestore.getInstance()

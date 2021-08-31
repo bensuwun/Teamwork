@@ -2,9 +2,7 @@ package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication
 
 import android.app.Activity
 import android.content.Intent
-import android.content.IntentSender
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,11 +16,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentLoginBinding
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.HomeActivity
 
 
 /**
@@ -30,7 +26,6 @@ import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.HomeActivity
  */
 class Login : Fragment() {
 
-    val RC_SIGN_IN = 0
     private val TAG: String = "LOGIN_FRAGMENT"
     lateinit var binding : FragmentLoginBinding
     lateinit var parentActivity: MainActivity

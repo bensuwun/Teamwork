@@ -16,7 +16,7 @@ import java.io.Serializable
  * @param username - The username of the user.
  * @param emailAddress - The user's email address.
  */
-data class User(val username: String, val emailAddress: String) : Serializable {
+data class User(val username: String) : Serializable {
 
     // Instance Attributes (not including default constructor attributes)
     // Getters and setters defined here by Kotlin's get/set features
@@ -32,13 +32,12 @@ data class User(val username: String, val emailAddress: String) : Serializable {
      * This constructor is used when generating user instances from the User Data Access Object.
      * @param userId - The user's ID generated from Firestore's DocumentId.
      * @param username - The user's username.
-     * @param emailAddress - The user's email address.
      * @param profileImageUri - The URL for the image of the user's account. This should be from a CDN.
      * @param projects - A Java ArrayList containing project instances.
      * @param tasks - A Java ArrayList containing task instances.
      */
-    constructor(userId: String, username: String, emailAddress: String, profileImageUri: String, authId: String,
-                projects: ArrayList<DocumentReference>, tasks: ArrayList<DocumentReference>): this(username, emailAddress) {
+    constructor(userId: String, username: String, profileImageUri: String, authId: String,
+                projects: ArrayList<DocumentReference>, tasks: ArrayList<DocumentReference>): this(username) {
         this.userId = userId
         this.profileImageUri = profileImageUri
         this.projectReferences = projects
@@ -49,10 +48,9 @@ data class User(val username: String, val emailAddress: String) : Serializable {
     /**
      * This constructor is used when creating a new user.
      * @param username - The user's username when creating an account.
-     * @param emailAddress - The user's email address.
      * @param authId - The user's auth ID from Firestore.
      */
-    constructor(username: String, emailAddress: String, authId: String): this(username, emailAddress) {
+    constructor(username: String, authId: String): this(username) {
         this.authId = authId
     }
 
@@ -61,8 +59,6 @@ data class User(val username: String, val emailAddress: String) : Serializable {
         sb.append(this.userId)
         sb.append(" | ")
         sb.append(this.username)
-        sb.append(" | ")
-        sb.append(this.emailAddress)
         return sb.toString()
     }
 

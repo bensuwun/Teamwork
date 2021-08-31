@@ -35,4 +35,9 @@
     <string name="chip_challenge">Challenge</string>
     <string name="sample_post_title">Difficulty with Pushups</string>
     <string name="comment_hint">Add comment...</string>
+
+    <!-- Tasks Dashboard Page -->
+    <string name="task_header">My Tasks</string>
+    <string name="task_filter_selector">Filter by</string>
+
 </resources>
