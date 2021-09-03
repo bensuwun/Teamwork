@@ -81,14 +81,18 @@ class UserDAO(): TeamworkFirestoreDAO() {
         val projectReferences = ArrayList<DocumentReference>()
         val taskReferences = ArrayList<DocumentReference>()
 
-        for(docRef in (document["projects"] as List<*>)) {
-            projectReferences.add(docRef as DocumentReference)
+        if(document["projects"] != null) {
+            for(docRef in (document["projects"] as List<*>)) {
+                projectReferences.add(docRef as DocumentReference)
+            }
         }
 
-        for(docRef in (document["tasks"] as List<*>)) {
-            taskReferences.add(docRef as DocumentReference)
+        if(document["tasks"] != null) {
+            for(docRef in (document["tasks"] as List<*>)) {
+                taskReferences.add(docRef as DocumentReference)
+            }
         }
-
+        
         return User(
             document.id,
             document["username"] as String,
