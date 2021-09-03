@@ -66,6 +66,7 @@ class Login : Fragment() {
                     }
                 }
             }
+            view.findNavController().navigate(R.id.navigateToHome)
         }
         
         // Configure Google Sign-In

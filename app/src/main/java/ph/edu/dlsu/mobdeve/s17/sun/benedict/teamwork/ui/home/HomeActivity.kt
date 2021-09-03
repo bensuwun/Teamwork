@@ -49,6 +49,7 @@ class HomeActivity : AppCompatActivity() {
 
         // Get User Data from Firestore
         val userDAO = UserDAO()
+
         userDAO.getUserByAuthId(fireBaseUser!!.uid) { success ->
             if(!success) {
                 Toast.makeText(this.applicationContext, "An error occurred that logged you out.", Toast.LENGTH_LONG).show()
@@ -67,6 +68,7 @@ class HomeActivity : AppCompatActivity() {
                 this.activeUser = userDAO.document as User
             }
         }
+
 
         // FragmentContainerView is currently not friendly, so we need to use supportFragmentManager to obtain the fragment
         // as a NavHostFragment, then gets its navController

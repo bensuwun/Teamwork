@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Guild
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.MyGuildsDirections
 import java.util.*
 
 /**
@@ -28,16 +30,19 @@ class MyGuildsAdapter(private var guilds: ArrayList<Guild>, private val context:
     }
 
     override fun onBindViewHolder(holder: MyGuildsViewHolder, position: Int) {
-        holder.tv_guild_name.text = guilds[position].name
-        holder.tv_guild_description.text = guilds[position].description
-        holder.tv_member_count.text = "Members: ${String.format("%,d", guilds[position].member_count)}"
+        val guild : Guild = guilds[position]
+        holder.tv_guild_name.text = guild.name
+        holder.tv_guild_description.text = guild.description
+        holder.tv_member_count.text = "Members: ${String.format("%,d", guild.member_count)}"
         // Use Picasso/Glide here --> String (Download URL) -> Int (Resource ID)
         holder.siv_guild_dp.setImageResource(R.drawable.my_guilds_empty)
         holder.mbtn_action.text = context.resources.getString(R.string.view_guild_btn)
         // Define click listener for mbtn_action
         holder.mbtn_action.setOnClickListener {
             // Go to guild's view dashboard
-            holder.mbtn_action.findNavController().navigate(R.id.navigateToGuildDashboard)
+            val bundle = bundleOf(
+                "guild_name" to guild.name)
+            holder.mbtn_action.findNavController().navigate(R.id.navigateToGuildDashboard, bundle)
         }
     }
 
@@ -57,5 +62,10 @@ class MyGuildsAdapter(private var guilds: ArrayList<Guild>, private val context:
             tv_guild_description = view.findViewById(R.id.tv_guild_description)
             mbtn_action = view.findViewById(R.id.mbtn_action)
         }
+    }
+
+    fun setData(guilds : ArrayList<Guild>) {
+        this.guilds = guilds
+        notifyDataSetChanged()
     }
 }

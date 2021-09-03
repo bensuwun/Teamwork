@@ -22,7 +22,6 @@ class GuildProfileActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         // Display up button from previous fragment
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         setEventHandlers()
     }
 
