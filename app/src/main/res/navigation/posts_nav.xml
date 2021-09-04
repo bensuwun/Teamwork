@@ -13,10 +13,20 @@
         <action
             android:id="@+id/navigateToViewPost"
             app:destination="@id/viewPostFragment" />
+        <action
+            android:id="@+id/navigateToAddGuildPostFragment"
+            app:destination="@id/addGuildPostFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/viewPostFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.posts.ViewPostFragment"
         android:label="fragment_view_post"
         tools:layout="@layout/fragment_view_post" />
+    <fragment
+        android:id="@+id/addGuildPostFragment"
+        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.posts.AddGuildPostFragment"
+        android:label="fragment_add_guild_post"
+        tools:layout="@layout/fragment_add_guild_post" />
 </navigation>

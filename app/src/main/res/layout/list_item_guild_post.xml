@@ -69,6 +69,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="@color/app_lightest_blue"
                 android:text="@string/chip_support"
+                app:rippleColor="@android:color/transparent"
                 style="@style/chip" />
 
             <com.google.android.material.chip.Chip
@@ -77,6 +78,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="@color/app_light_blue"
                 android:text="@string/chip_social"
+                app:rippleColor="@android:color/transparent"
                 style="@style/chip" />
 
             <com.google.android.material.chip.Chip
@@ -85,6 +87,7 @@
                 android:layout_height="wrap_content"
                 app:chipBackgroundColor="@color/app_yellow"
                 android:text="@string/chip_challenge"
+                app:rippleColor="@android:color/transparent"
                 style="@style/chip"/>
         </com.google.android.material.chip.ChipGroup>
         <TextView

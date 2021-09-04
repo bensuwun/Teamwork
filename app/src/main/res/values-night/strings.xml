@@ -34,4 +34,6 @@
     <string name="chip_challenge">Challenge</string>
     <string name="sample_post_title">Difficulty with Pushups</string>
     <string name="comment_hint">Add comment...</string>
+    <string name="desc_header">Description</string>
+    <string name="post_title_header">Title</string>
 </resources>

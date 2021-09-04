@@ -33,6 +33,11 @@
         <item name="chipMinTouchTargetSize">30dp</item>
         <item name="android:textSize">11sp</item>
         <item name="android:checkable">false</item>
-        <item name="rippleColor">@android:color/transparent</item>
+    </style>
+    <style name="tag_chip" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipMinHeight">25dp</item>
+        <item name="chipMinTouchTargetSize">30dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:checkable">true</item>
     </style>
 </resources>

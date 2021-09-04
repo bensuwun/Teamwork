@@ -39,5 +39,7 @@
     <!-- Tasks Dashboard Page -->
     <string name="task_header">My Tasks</string>
     <string name="task_filter_selector">Filter by</string>
+    <string name="desc_header">Description</string>
+    <string name="post_title_header">Title</string>
 
 </resources>

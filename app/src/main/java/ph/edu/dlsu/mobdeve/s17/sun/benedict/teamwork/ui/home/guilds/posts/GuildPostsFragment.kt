@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters.GuildPostAdapter
@@ -27,6 +28,15 @@ class GuildPostsFragment : Fragment() {
 
         binding.rvGuildPosts.layoutManager = LinearLayoutManager(activity)
         binding.rvGuildPosts.adapter = context?.let { GuildPostAdapter(Post.initSampleData(), it) }
+
+        setEventListeners()
+
         return view
+    }
+
+    private fun setEventListeners(){
+        binding.fabAddPost.setOnClickListener {
+            it.findNavController().navigate(R.id.navigateToAddGuildPostFragment)
+        }
     }
 }
