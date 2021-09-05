@@ -46,6 +46,22 @@ class Post {
                 0,
                 0,
                 Timestamp(1629903088, 0)))
+            posts.add(Post(User(
+                "redstoneadi",
+                "password"),
+                "Difficulty with Pushups",
+                "I want to somehow be as strong as Saitama, he’s my biggest idol! But I can’t seem to do push-ups properly, any tips?",
+                0,
+                0,
+                Timestamp(1629903088, 0)))
+            posts.add(Post(User(
+                "redstoneadi",
+                "password"),
+                "Difficulty with Pushups",
+                "I want to somehow be as strong as Saitama, he’s my biggest idol! But I can’t seem to do push-ups properly, any tips?",
+                0,
+                0,
+                Timestamp(1629903088, 0)))
             return posts
         }
     }

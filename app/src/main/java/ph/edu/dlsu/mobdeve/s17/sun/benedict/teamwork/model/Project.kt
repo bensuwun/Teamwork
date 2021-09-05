@@ -1,5 +1,6 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import java.io.Serializable
 import java.util.*
@@ -46,6 +47,25 @@ data class Project(var name: String) : Serializable {
         this.coverImage = coverImageUri
         this.completionDate = completionDate
         this.tasks = tasks
+    }
+
+    companion object {
+        fun initSampleData() : ArrayList<Project>{
+            var projects : ArrayList<Project> = ArrayList()
+            for (i in 0..2){
+                projects.add(Project(
+                    "1",
+                    "MOBDEVE MCO2",
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+                    "Android Development with Kotlin",
+                    "Test",
+                    Date(),
+                    ArrayList()
+                ))
+            }
+
+            return projects
+        }
     }
 
 }
