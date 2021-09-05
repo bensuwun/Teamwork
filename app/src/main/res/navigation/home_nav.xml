@@ -128,6 +128,6 @@
     <fragment
         android:id="@+id/viewProjectFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.projects.ViewProjectFragment"
-        android:label="fragment_view_project"
+        android:label="Project Details"
         tools:layout="@layout/fragment_view_project" />
 </navigation>

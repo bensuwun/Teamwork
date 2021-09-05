@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
@@ -32,7 +33,12 @@ class ProjectAdapter(val projects: ArrayList<Project>, val context: Context): Re
         holder.tvDesc.text = project.description
         holder.mcvProject.setOnClickListener{
             // TODO: Pass necessary data here
-            it.findNavController().navigate(R.id.navigateToViewProject)
+            val bundle = bundleOf(
+                "projectName" to project.name,
+                "aboutProject" to project.about,
+                "projectDesc" to project.description
+            )
+            it.findNavController().navigate(R.id.navigateToViewProject, bundle)
         }
 
     }
