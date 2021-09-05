@@ -42,4 +42,8 @@
     <string name="desc_header">Description</string>
     <string name="post_title_header">Title</string>
 
+    <!-- Tasks List Item -->
+    <string name="task_placeholder_name">Teamwork Task</string>
+    <string name="task_placeholder_about">Teamwork task waiting to be completed. This is the about part!</string>
+
 </resources>

@@ -92,7 +92,7 @@ class UserDAO(): TeamworkFirestoreDAO() {
                 taskReferences.add(docRef as DocumentReference)
             }
         }
-        
+
         return User(
             document.id,
             document["username"] as String,

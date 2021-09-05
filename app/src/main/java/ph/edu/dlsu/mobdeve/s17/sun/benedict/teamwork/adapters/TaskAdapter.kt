@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
@@ -20,12 +22,20 @@ class TaskAdapter(val tasks: ArrayList<Task>, val context: Context): RecyclerVie
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, pos: Int) {
-        TODO("Not yet implemented")
+        val task = this.tasks[pos]
+        // Do not change coverImage for now -- placeholders
+        //holder.ivCoverImage =
+
+        holder.tvTaskAbout.setText(task.about)
+        holder.tvTaskName.setText(task.name)
+
     }
 
     class TaskViewHolder(v : View): RecyclerView.ViewHolder(v) {
-        // TODO Declare & Initialize views
-
+        // Initialize Views
+        var ivCoverImage: ImageView = v.findViewById(R.id.task_cover_image_small)
+        var tvTaskName: TextView = v.findViewById(R.id.task_item_name)
+        var tvTaskAbout: TextView = v.findViewById(R.id.task_item_about)
     }
 
 }
