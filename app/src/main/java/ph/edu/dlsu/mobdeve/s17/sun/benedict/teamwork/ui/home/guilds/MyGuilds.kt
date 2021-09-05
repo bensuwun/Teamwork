@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.*
@@ -75,7 +76,16 @@ class MyGuilds : Fragment() {
         // TODO: Get logged in user's userID
         guildDAO.getMyGuilds("KZpVJ7lrdSO2DMSpm9nK")
 
+        // Set event listeners
+        setEventHandlers()
         return view
     }
+
+    private fun setEventHandlers(){
+        binding.fabAddGuild.setOnClickListener{
+            it.findNavController().navigate(R.id.navigateToAddGuild)
+        }
+    }
+
 
 }
