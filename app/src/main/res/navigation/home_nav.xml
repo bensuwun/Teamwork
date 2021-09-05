@@ -64,6 +64,9 @@
             app:destination="@id/guildDashboard"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/navigateToAddGuild"
+            app:destination="@id/addGuildFragment" />
     </fragment>
     <fragment
         android:id="@+id/guildDashboard"
@@ -99,4 +102,9 @@
             android:name="guildID"
             app:argType="long" />
     </activity>
+    <fragment
+        android:id="@+id/addGuildFragment"
+        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.AddGuildFragment"
+        android:label="fragment_add_guild"
+        tools:layout="@layout/fragment_add_guild" />
 </navigation>
