@@ -1,4 +1,4 @@
-package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home
+package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.tasks
 
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.DocumentReference
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters.TaskAdapter
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentLoginBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentTasksBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
 import java.util.*
