@@ -36,7 +36,6 @@ class MyGuildsAdapter(private var guilds: ArrayList<Guild>, private val context:
         holder.tv_member_count.text = "Members: ${String.format("%,d", guild.member_count)}"
         // Use Picasso/Glide here --> String (Download URL) -> Int (Resource ID)
         holder.siv_guild_dp.setImageResource(R.drawable.my_guilds_empty)
-        holder.mbtn_action.text = context.resources.getString(R.string.view_guild_btn)
         // Define click listener for mbtn_action
         holder.mbtn_action.setOnClickListener {
             // Go to guild's view dashboard

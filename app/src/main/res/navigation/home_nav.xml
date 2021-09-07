@@ -71,7 +71,13 @@
         android:id="@+id/searchGuilds"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.SearchGuilds"
         android:label="Search Guilds"
-        tools:layout="@layout/fragment_search_guilds" />
+        tools:layout="@layout/fragment_search_guilds" >
+        <action
+            android:id="@+id/fromSearchGuildsNavigateToGuildProfile"
+            app:destination="@id/guildProfileActivity"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
     <fragment
         android:id="@+id/myGuilds"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.MyGuilds"
@@ -105,6 +111,11 @@
     </fragment>
     <activity
         android:id="@+id/guildProfileActivity"
+        android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.profile.GuildProfileActivity"
+        android:label="activity_guild_profile"
+        tools:layout="@layout/activity_guild_profile" />
+    <activity
+        android:id="@+id/guildProfileActivity2"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.profile.GuildProfileActivity"
         android:label="activity_guild_profile"
         tools:layout="@layout/activity_guild_profile" />

@@ -17,7 +17,7 @@ class GuildMemberDAO() : TeamworkFirestoreDAO() {
     override val fireStoreCollection: String = "guild_members"
     override var queryResults: ArrayList<Any> = ArrayList()
     override var document: Any? = null
-    private val tag : String = "GuildMemberDAO"
+    private val TAG : String = "GuildMemberDAO"
 
     override fun buildHashMap(): HashMap<String, Any> {
         TODO("Not yet implemented")
@@ -27,25 +27,51 @@ class GuildMemberDAO() : TeamworkFirestoreDAO() {
         return GuildMember(document["guildID"] as String, document["userID"] as String)
     }
 
-    /**
-     * Obtains all guild IDs that the given user has joined.
-     */
-    fun getMyGuildIDs(userID : String) : ArrayList<String> {
-        var guildIDs : ArrayList<String> = ArrayList()
-        GlobalScope.launch(Dispatchers.IO) {
-            try{
-                val result = fireStoreDB.collection(fireStoreCollection).whereEqualTo("userID", userID)
-                    .get()
-                    .await()
-                for (document in result){
-                    Log.d(tag, "${document.id} => ${document.data}")
-                    guildIDs.add(parseDocument(document).guildID)
-                }
-            } catch (e: FirebaseFirestoreException) {
-                Log.w(tag, "Error getting documents", e)
-            }
-        }
 
-        return guildIDs
+    /**
+     * Creates a new document in guild_members collection. Indicates that a user has joined a new guild.
+     */
+    fun joinGuild(guildId : String, userAuthUid : String) {
+        val data = hashMapOf(
+            "guildId" to guildId,
+            "userAuthUid" to userAuthUid
+        )
+        fireStoreDB.collection(fireStoreCollection)
+            .add(data)
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot written with ID: ${it.id}")
+            }
+
+            .addOnFailureListener {
+                Log.d(TAG, "Something went wrong went attempting to join the guild")
+                Log.e(TAG, "Something went wrongwent attempting to join the guild")
+            }
+    }
+
+    /**
+     * Checks if the given user is a part of a given guild.
+     */
+    fun isAMemberOf(guildId : String, userAuthUid : String) {
+        fireStoreDB.collection(fireStoreCollection)
+            .whereEqualTo("guildId", guildId)
+            .whereEqualTo("userAuthUid", userAuthUid)
+            .get()
+            .addOnSuccessListener {
+                // NOT a member
+                if (it.size() == 0) {
+                    // TODO: Broadcast
+                }
+                // IS a member
+                else if (it.size() == 1) {
+                    // TODO: Broadcast
+                }
+                else {
+                    Log.w(TAG, "WARNING: Data duplicate detected in guild_members collection")
+                }
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "Something went wrong when calling isAMemberOf method")
+                Log.e(TAG, "Something went wrong when calling isAMemberOf method")
+            }
     }
 }

@@ -1,18 +1,17 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model
 
 class GuildMember {
-    var guildID : String = ""
-    var userID : String = ""
+    var guildId : String = ""
+    var userAuthUid : String = ""
 
-    constructor(guildID: String, userID: String) {
-        this.guildID = guildID
-        this.userID = userID
+    constructor(guildID: String, userAuthUid: String) {
+        this.guildId = guildID
+        this.userAuthUid = userAuthUid
     }
 
     constructor(){
-        this.guildID = ""
-        this.userID = ""
+        this.guildId = ""
+        this.userAuthUid = ""
     }
-
 
 }
