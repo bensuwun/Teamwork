@@ -92,5 +92,8 @@ class MyGuilds : Fragment() {
         }
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
+    }
 }

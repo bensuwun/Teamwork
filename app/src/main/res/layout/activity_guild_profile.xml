@@ -19,7 +19,6 @@
             android:fitsSystemWindows="true"
             app:contentScrim="@color/app_orange"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            app:title="Guild Name"
             android:id="@+id/collapsingtl_profile_header">
             
             <androidx.appcompat.widget.AppCompatImageView
@@ -42,7 +41,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:padding="20dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -76,7 +75,6 @@
                 android:layout_marginBottom="15dp"/>
 
             <TextView
-                android:id="@+id/tv_guild_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Description"
@@ -86,6 +84,7 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/tv_guild_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/desc_dummy_text_long"/>

@@ -3,10 +3,8 @@ package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
@@ -26,6 +24,8 @@ class GuildDashboard : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
+
         // Inflate the layout for this fragment
         binding = FragmentGuildDashboardBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -54,4 +54,5 @@ class GuildDashboard : Fragment() {
 
         }
     }
+    
 }

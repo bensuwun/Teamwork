@@ -24,6 +24,9 @@ class GuildDAO() : TeamworkFirestoreDAO() {
     private lateinit var context : Context
     private lateinit var broadcastManager : LocalBroadcastManager
 
+    /**
+     * Requires context in order to initialize our broadcast manager.
+     */
     constructor(context : Context) : this() {
         this.context = context
         this.broadcastManager = LocalBroadcastManager.getInstance(context)
