@@ -108,6 +108,11 @@
             app:argType="string"
             android:defaultValue='""' />
         <argument android:name="guild_name" />
+        <action
+            android:id="@+id/navigateBackToMyGuilds"
+            app:popUpTo="@id/myGuilds"
+            app:popUpToInclusive="true"
+            app:destination="@id/myGuilds" />
     </fragment>
     <activity
         android:id="@+id/guildProfileActivity"
@@ -134,7 +139,7 @@
     <fragment
         android:id="@+id/addGuildFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.AddGuildFragment"
-        android:label="fragment_add_guild"
+        android:label="Create a Guild"
         tools:layout="@layout/fragment_add_guild" />
     <fragment
         android:id="@+id/viewProjectFragment"

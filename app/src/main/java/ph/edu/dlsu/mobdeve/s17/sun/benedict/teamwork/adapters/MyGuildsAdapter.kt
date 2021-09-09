@@ -40,7 +40,11 @@ class MyGuildsAdapter(private var guilds: ArrayList<Guild>, private val context:
         holder.mbtn_action.setOnClickListener {
             // Go to guild's view dashboard
             val bundle = bundleOf(
-                "guild_name" to guild.name)
+                "guildId" to guild.guildId,
+                "name" to guild.name,
+                "member_count" to guild.member_count,
+                "description" to guild.description
+            )
             holder.mbtn_action.findNavController().navigate(R.id.navigateToGuildDashboard, bundle)
         }
     }

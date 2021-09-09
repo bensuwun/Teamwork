@@ -27,6 +27,7 @@ class GuildMemberDAO : TeamworkFirestoreDAO {
     private lateinit var broadcastManager : LocalBroadcastManager
     private val intentMemberCheck : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guild_member"
     private val intentJoinedGuild : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guild_join_success"
+    private val intentLeftGuild : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.left_guild"
 
     /**
      * Requires context in order to initialize our broadcast manager.
@@ -63,6 +64,25 @@ class GuildMemberDAO : TeamworkFirestoreDAO {
         } catch(e : FirebaseFirestoreException){
             e.message?.let { Log.e(TAG, it) }
             Log.e(TAG, "Something went wrong when calling method joinGuild")
+        }
+    }
+
+    fun leaveGuild(guildId : String, userAuthUid: String) {
+        val docId = "${guildId}_${userAuthUid}"
+        try{
+            val intent = Intent(intentLeftGuild)
+            fireStoreDB.collection(fireStoreCollection)
+                .document(docId)
+                .delete()
+                .addOnSuccessListener {
+                    Log.d(TAG, "Successfully deleted guild_member record")
+                    broadcastManager.sendBroadcast(intent)
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "Something went wrong when trying to delete the guild_member record")
+                }
+        } catch(e : FirebaseFirestoreException) {
+            Log.e(TAG, "Something went wrong when trying to delete the guild_member record")
         }
     }
 

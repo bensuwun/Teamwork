@@ -123,6 +123,8 @@ class GuildProfileActivity : AppCompatActivity() {
                     it1
                 )
             }
+            // Increment guild member count
+            GuildDAO(this).incrementGuildMemberCount(guildId)
         }
     }
 
