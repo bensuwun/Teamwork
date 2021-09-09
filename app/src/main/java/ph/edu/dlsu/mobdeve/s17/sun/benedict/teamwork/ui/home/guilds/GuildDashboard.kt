@@ -19,7 +19,6 @@ import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildMemberDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentGuildDashboardBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.posts.GuildPostsActivity
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.profile.GuildProfileActivity
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 import java.lang.Exception
 
@@ -98,7 +97,7 @@ class GuildDashboard : Fragment() {
         )
         binding.mcvGuildProfile.setOnClickListener {
             // startActivity(Intent(activity, GuildProfileActivity::class.java))
-            view.findNavController().navigate(R.id.navigateToGuildProfileActivity, bundle)
+            view.findNavController().navigate(R.id.navigateToGuildProfileFragment, bundle)
         }
 
         binding.mcvGuildPosts.setOnClickListener {

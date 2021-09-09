@@ -44,8 +44,10 @@ class AllGuildsAdapter(private var guilds: ArrayList<Guild>, private val context
         bundle.putLong("member_count", guild.member_count)
         bundle.putString("description", guild.description)
         holder.mbtn_action.setOnClickListener{
-            it.findNavController().navigate(R.id.fromSearchGuildsNavigateToGuildProfile, bundle)
+            it.findNavController().navigate(R.id.navigateToGuildPreview, bundle)
         }
+
+
     }
 
     override fun getItemCount() = guilds.size

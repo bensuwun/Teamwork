@@ -10,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Teamwork">
         <activity android:name=".ui.home.guilds.posts.GuildPostsActivity"></activity>
-        <activity android:name=".ui.home.guilds.profile.GuildProfileActivity" />
         <activity android:name=".ui.home.HomeActivity" />
         <activity android:name=".ui.authentication.MainActivity"
                     android:configChanges="orientation|screenSize">
