@@ -67,6 +67,9 @@ class GuildMemberDAO : TeamworkFirestoreDAO {
         }
     }
 
+    /**
+     * Used when a user leaves a guild. Removes the corresponding document from the guild_members collection.
+     */
     fun leaveGuild(guildId : String, userAuthUid: String) {
         val docId = "${guildId}_${userAuthUid}"
         try{

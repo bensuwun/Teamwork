@@ -58,7 +58,7 @@ class GuildDAO() : TeamworkFirestoreDAO() {
     }
 
     /**
-     * This function queries all the documents in the "guilds" collection in Firestore.
+     * This function queries ALL the documents in the "guilds" collection in Firestore.
      * After query, it broadcasts the queried guilds to SearchGuilds.kt
      */
     fun getAllGuilds(userAuthUid : String){
@@ -89,6 +89,9 @@ class GuildDAO() : TeamworkFirestoreDAO() {
         }
     }
 
+    /**
+     * Obtains the user's joined guilds.
+     */
     fun getMyGuilds(userAuthUid: String){
         queryResults.clear()
 
@@ -153,12 +156,20 @@ class GuildDAO() : TeamworkFirestoreDAO() {
         }
     }
 
+    /**
+     * Increments the member_count of a certain guild.
+     * Used when a user joins a guild.
+     */
     fun incrementGuildMemberCount(guildId : String) {
         fireStoreDB.collection(fireStoreCollection)
             .document(guildId)
             .update("member_count", FieldValue.increment(1))
     }
 
+    /**
+     * Decrements the member_count of a certain guild.
+     * Used when a user leaves a guild.
+     */
     fun decrementGuildMemberCount(guildId : String) {
         fireStoreDB.collection(fireStoreCollection)
             .document(guildId)

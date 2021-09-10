@@ -8,17 +8,19 @@
 
     <ImageView
         android:id="@+id/iv_guild_header"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:src="@color/app_navy_blue"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:src="@color/app_navy_blue"
+        android:tintMode="src_atop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#92000000" />
 
     <ImageView
-        android:id="@+id/iv_change_guild_header"
+        android:id="@+id/iv_change_guild_header_icon"
         app:layout_constraintStart_toStartOf="@id/iv_guild_header"
         app:layout_constraintEnd_toEndOf="@id/iv_guild_header"
         app:layout_constraintTop_toTopOf="@id/iv_guild_header"
@@ -45,7 +47,7 @@
         app:strokeWidth="1dp" />
 
     <ImageView
-        android:id="@+id/iv_change_guild_dp"
+        android:id="@+id/iv_change_guild_dp_icon"
         app:layout_constraintStart_toStartOf="@id/siv_guild_dp"
         app:layout_constraintEnd_toEndOf="@id/siv_guild_dp"
         app:layout_constraintTop_toTopOf="@id/siv_guild_dp"
@@ -114,6 +116,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_create_guild"
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

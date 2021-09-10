@@ -30,6 +30,7 @@ class Guild() : Parcelable{
 
     /**
      * No guild DP, for testing.
+     * TODO: Remove when done
      */
     constructor(guildId : String, name: String, description: String, member_count: Long) : this() {
         this.name = name
