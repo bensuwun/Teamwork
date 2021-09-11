@@ -32,17 +32,20 @@ class AllGuildsAdapter(private var guilds: ArrayList<Guild>, private val context
         val guild : Guild = guilds[position]
         holder.tv_guild_name.text = guild.name
         holder.tv_guild_description.text = guild.description
-        holder.tv_member_count.text = "Members: ${String.format("%,d", guild.member_count)}"
+        holder.tv_member_count.text = "Members: ${String.format("%,d", guild.memberCount)}"
         /*
         // Use Picasso/Glide here --> String (Download URL) -> Int (Resource ID)
         holder.siv_guild_dp.setImageResource(R.drawable.my_guilds_empty)
         */
         // Define click listener for mbtn_action
         val bundle = Bundle()
-        bundle.putString("guildId", guild.guildId)
         bundle.putString("name", guild.name)
-        bundle.putLong("member_count", guild.member_count)
+        bundle.putParcelable("master", guild.master)
+        bundle.putString("profileImage", guild.profileImage)
+        bundle.putString("headerImage", guild.headerImage)
+        bundle.putLong("memberCount", guild.memberCount)
         bundle.putString("description", guild.description)
+
         holder.mbtn_action.setOnClickListener{
             it.findNavController().navigate(R.id.navigateToGuildPreview, bundle)
         }

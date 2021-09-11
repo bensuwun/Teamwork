@@ -55,7 +55,7 @@ class GuildProfileFragment : Fragment() {
         try{
             guildId = arguments?.getString("guildId").toString()
             name = arguments?.getString("name").toString()
-            memberCount = arguments?.getLong("member_count", 0)!!
+            memberCount = arguments?.getLong("memberCount", 0)!!
             description = arguments?.getString("description").toString()
             UserPreferences.getUserAuthUid()?.let {
                 GuildMemberDAO(requireContext()).isAMemberOf(guildId,

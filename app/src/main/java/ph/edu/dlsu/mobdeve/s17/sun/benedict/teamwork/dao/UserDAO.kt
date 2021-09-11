@@ -31,27 +31,28 @@ class UserDAO(): TeamworkFirestoreDAO() {
      * @param callback A callback function that takes in the `success` parameter as a boolean.
      */
     fun getUserByAuthId(authId: String, callback: (success: Boolean) -> Unit) {
-        this.getDocumentsByFieldValue("authUid", authId) { success ->
-            if(success) {
-                when {
-                    (this.queryResults.size == 1) -> {
-                        this.document = this.queryResults[0]
-                        callback(true)
-                    }
-                    (this.queryResults.size > 1) -> {
-                        Log.e(
-                            TAG,
-                            "For some reason, a single authId returned more than one user, this is morbidly wrong!"
-                        )
-                        callback(false)
-                    }
-                    else -> {
-                        Log.d(TAG, "No user was found with that specific authId.")
-                        callback(false)
-                    }
+        this.queryResults.clear()
+        fireStoreDB.collection(fireStoreCollection)
+            .document(authId)
+            .get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Log.d(
+                        TAG,
+                        "Got the document with documentId $authId"
+                    )
+                    this.document = it.result.toObject(User::class.java)
+                    callback(true)
+                }
+                else {
+                    Log.e(TAG, "Unable to get document using field $authId.")
+                    callback(false)
                 }
             }
-        }
+            .addOnFailureListener {
+                Log.e(TAG, it.message.toString())
+                callback(false)
+            }
     }
 
     /**
@@ -63,7 +64,7 @@ class UserDAO(): TeamworkFirestoreDAO() {
     override fun buildHashMap(): HashMap<String, Any> {
         val userMap = HashMap<String, Any>()
         (document as User).let { userMap.put("username", it.username) }
-        (document as User).let { userMap.put("profileImage", it.profileImageUri) }
+        (document as User).let { userMap.put("profileImage", it.profileImage) }
 
         return userMap
     }
@@ -94,12 +95,9 @@ class UserDAO(): TeamworkFirestoreDAO() {
         }
 
         return User(
-            document.id,
             document["username"] as String,
             document["profileImage"] as String,
             document["authUid"] as String,
-            projectReferences,
-            taskReferences
         )
     }
 }

@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.firestoreSettings
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -14,6 +16,7 @@ import kotlinx.coroutines.tasks.await
 import org.w3c.dom.Document
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Guild
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.GuildMember
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.AddGuildFragment
 import java.util.ArrayList
 
 class GuildDAO() : TeamworkFirestoreDAO() {
@@ -55,6 +58,51 @@ class GuildDAO() : TeamworkFirestoreDAO() {
         val name : String = document["name"] as String
 
         return Guild()
+    }
+
+    /**
+     * Used in AddGuildFragment
+     * This function creates a guild using the passed Guild object parameter.
+     */
+    fun createGuild(guild : Guild) {
+        try {
+            val intent = Intent(AddGuildFragment.intentGuildCreated)
+            fireStoreDB.collection(fireStoreCollection)
+                .document(guild.name)
+                .set(guild)
+                .addOnSuccessListener {
+                    Log.d(TAG, "Successfully added ${guild.name} to FireStore")
+                    broadcastManager.sendBroadcast(intent)
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "Failed to add ${guild.name} to FireStore")
+                }
+
+        }catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.message.toString())
+        }
+    }
+
+    /**
+     * Used in AddGuildFragment.
+     * Checks if the given guild name already exists.
+     */
+    fun guildExists(name : String) {
+        try {
+            val intent = Intent(AddGuildFragment.intentGuildExists)
+            val bundle = Bundle()
+            fireStoreDB.collection(fireStoreCollection)
+                .document(name)
+                .get()
+                .addOnSuccessListener {
+                    Log.d(TAG, "Does $name already exist in database: ${it.exists()}")
+                    bundle.putBoolean("exists", it.exists())
+                    intent.putExtras(bundle)
+                    broadcastManager.sendBroadcast(intent)
+                }
+        } catch(e : FirebaseFirestoreException) {
+            Log.e(TAG, e.message.toString())
+        }
     }
 
     /**
