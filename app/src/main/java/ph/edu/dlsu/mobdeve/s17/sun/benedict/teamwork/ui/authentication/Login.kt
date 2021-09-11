@@ -18,7 +18,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.UserDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentLoginBinding
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.User
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 
 
@@ -93,6 +95,16 @@ class Login : Fragment() {
                     val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
                     this.parentActivity.fbAuth.signInWithCredential(credential).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            // SAVE USER TO SHARED PREFERENCES
+                            var userDAO = UserDAO()
+                            val userPreferences = UserPreferences(requireContext())
+                            UserPreferences.getUserAuthUid()?.let {
+                                userDAO.getUserByAuthId(it) { success ->
+                                    if (success) {
+                                        userPreferences.saveLoggedInUser(userDAO.document as User)
+                                    }
+                                }
+                            }
                             view.findNavController().navigate(R.id.navigateToHome)
                             activity?.finish()
                         } else {

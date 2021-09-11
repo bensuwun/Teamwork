@@ -17,7 +17,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#92000000" />
+        app:tint="#92000000"
+        android:tag=""/>
 
     <ImageView
         android:id="@+id/iv_change_guild_header_icon"
@@ -44,7 +45,8 @@
         app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
         app:srcCompat="@drawable/placeholder_guild_dp"
         app:strokeColor="@color/black"
-        app:strokeWidth="1dp" />
+        app:strokeWidth="1dp"
+        android:tag=""/>
 
     <ImageView
         android:id="@+id/iv_change_guild_dp_icon"

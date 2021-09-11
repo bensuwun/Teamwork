@@ -1,5 +1,8 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model
 
+import android.os.Parcel
+import android.os.Parcelable
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.DocumentReference
 import java.io.Serializable
 
@@ -8,7 +11,7 @@ import java.io.Serializable
  * @author Adriel Isaiah V. Amoguis
  *
  * @constructor The primary constructor is a generic constructor that accepts only
- * the username and email address, since these two are the most basic requirements
+ * the username, since these two are the most basic requirements
  * of creating a user account. For new users, a password is set later on using the
  * set password method. A more specified constructor is declared within the body that
  * will handle instance generation from the data access object from Firestore.
@@ -16,50 +19,61 @@ import java.io.Serializable
  * @param username - The username of the user.
  * @param emailAddress - The user's email address.
  */
-data class User(val username: String) : Serializable {
+class User() : Serializable, Parcelable{
 
     // Instance Attributes (not including default constructor attributes)
     // Getters and setters defined here by Kotlin's get/set features
-    var userId: String = ""
-    var profileImageUri: String = ""
-    var projectReferences: ArrayList<DocumentReference> = ArrayList()
-    var taskReferences: ArrayList<DocumentReference> = ArrayList()
+    @DocumentId
+    var authUid: String = ""
+    var username: String = ""
+    var profileImage: String = ""
 
-    // The value of this instance attribute cannot be extracted.
-    var authId: String = ""
-
-    /**
-     * This constructor is used when generating user instances from the User Data Access Object.
-     * @param userId - The user's ID generated from Firestore's DocumentId.
-     * @param username - The user's username.
-     * @param profileImageUri - The URL for the image of the user's account. This should be from a CDN.
-     * @param projects - A Java ArrayList containing project instances.
-     * @param tasks - A Java ArrayList containing task instances.
-     */
-    constructor(userId: String, username: String, profileImageUri: String, authId: String,
-                projects: ArrayList<DocumentReference>, tasks: ArrayList<DocumentReference>): this(username) {
-        this.userId = userId
-        this.profileImageUri = profileImageUri
-        this.projectReferences = projects
-        this.taskReferences = tasks
-        this.authId = authId
+    constructor(parcel: Parcel) : this() {
+        authUid = parcel.readString().toString()
+        username = parcel.readString().toString()
+        profileImage = parcel.readString().toString()
     }
 
     /**
-     * This constructor is used when creating a new user.
-     * @param username - The user's username when creating an account.
-     * @param authId - The user's auth ID from Firestore.
+     * This constructor is used when generating user instances from the User Data Access Object.
+     * @param username - The user's username.
+     * @param authUid - The document ID for this User.
+     * @param profileImageUri - The URL for the image of the user's account. This should be from a CDN.
      */
-    constructor(username: String, authId: String): this(username) {
-        this.authId = authId
+    constructor(authUid: String, username: String, profileImageUri: String): this() {
+        this.authUid = authUid
+        this.profileImage = profileImageUri
     }
 
     override fun toString(): String {
         val sb = StringBuilder("[User] ")
-        sb.append(this.userId)
+        sb.append(this.authUid)
         sb.append(" | ")
         sb.append(this.username)
         return sb.toString()
+    }
+
+    /**
+     * Parcelable implementations.
+     */
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(authUid)
+        parcel.writeString(username)
+        parcel.writeString(profileImage)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<User> {
+        override fun createFromParcel(parcel: Parcel): User {
+            return User(parcel)
+        }
+
+        override fun newArray(size: Int): Array<User?> {
+            return arrayOfNulls(size)
+        }
     }
 
 }
