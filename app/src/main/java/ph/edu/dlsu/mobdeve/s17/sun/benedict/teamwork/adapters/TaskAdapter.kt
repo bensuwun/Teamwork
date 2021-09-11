@@ -47,7 +47,8 @@ class TaskAdapter(val tasks: ArrayList<Task>, val context: Context): RecyclerVie
 
     class TaskViewHolder(v : View): RecyclerView.ViewHolder(v) {
         // Initialize Views
-        var ivCoverImage: ImageView = v.findViewById(R.id.task_cover_image_small)
+        var tvTaskTime: TextView = v.findViewById(R.id.task_item_due_time)
+        var tvTaskDate: TextView = v.findViewById(R.id.task_item_due_date)
         var tvTaskName: TextView = v.findViewById(R.id.task_item_name)
         var tvTaskAbout: TextView = v.findViewById(R.id.task_item_about)
         var ltTaskCard: ConstraintLayout = v.findViewById(R.id.task_list_item_container)
