@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.imageview.ShapeableImageView
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
@@ -33,10 +34,16 @@ class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: 
     }
 
     override fun onBindViewHolder(holder: GuildPostViewHolder, position: Int) {
-        holder.tv_username.text = posts[position].author.username
-        holder.tv_post_description.text = posts[position].description
-        holder.tv_post_title.text = posts[position].title
+        val post : Post = posts[position]
+        holder.tv_username.text = post.author
+        // TODO: Implement date parser
+        holder.tv_date_posted.text
+        holder.tv_post_description.text = post.description
+        holder.tv_post_title.text = post.title
+        holder.tv_comments.text = post.comments.toString()
+        holder.tv_likes.text = post.likes.toString()
         holder.iv_like_icon.setOnClickListener {
+            // TODO: Implement like functionality
             /*
             // if is liked
             holder.iv_like_icon.setImageResource(R.drawable.ic_baseline_favorite_24)
@@ -49,8 +56,15 @@ class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: 
             // View post
             holder.post_container.findNavController().navigate(R.id.navigateToViewPost)
         }
-
-
+        // Chips
+        if(post.tags.challenge || post.tags.support || post.tags.social){
+            if(!post.tags.challenge) holder.chipChallenge.visibility = View.GONE
+            if(!post.tags.support) holder.chipSupport.visibility = View.GONE
+            if(!post.tags.social) holder.chipSocial.visibility = View.GONE
+        }
+        else{
+            holder.chipGroup.visibility = View.GONE
+        }
     }
 
     override fun getItemCount() = posts.size
@@ -66,6 +80,10 @@ class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: 
         var iv_like_icon: AppCompatImageView
         var tv_likes: TextView
         var tv_comments: TextView
+        var chipGroup : ChipGroup
+        var chipSupport : Chip
+        var chipSocial : Chip
+        var chipChallenge : Chip
 
         init {
             post_container = view.findViewById(R.id.post_container)
@@ -78,6 +96,15 @@ class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: 
             iv_like_icon = view.findViewById(R.id.iv_like_icon)
             tv_likes = view.findViewById(R.id.tv_likes)
             tv_comments = view.findViewById(R.id.tv_comments)
+            chipGroup = view.findViewById(R.id.cg_tags)
+            chipSupport = view.findViewById(R.id.chip_support)
+            chipSocial = view.findViewById(R.id.chip_social)
+            chipChallenge = view.findViewById(R.id.chip_challenge)
         }
+    }
+
+    fun setData(posts : ArrayList<Post>) {
+        this.posts = posts
+        notifyDataSetChanged()
     }
 }

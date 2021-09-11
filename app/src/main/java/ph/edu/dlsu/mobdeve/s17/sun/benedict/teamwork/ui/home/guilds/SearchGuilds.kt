@@ -68,7 +68,6 @@ class SearchGuilds : Fragment() {
         LocalBroadcastManager.getInstance(requireContext())
             .registerReceiver(broadcastReceiver, IntentFilter("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guilds"))
 
-        // TODO: Get logged-in user's UserID
         guildDAO.getAllGuilds("KZpVJ7lrdSO2DMSpm9nK")
 
         return view

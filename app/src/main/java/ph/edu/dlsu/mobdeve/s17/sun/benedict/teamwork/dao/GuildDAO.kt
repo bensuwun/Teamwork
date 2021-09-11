@@ -24,6 +24,9 @@ class GuildDAO() : TeamworkFirestoreDAO() {
     private lateinit var context : Context
     private lateinit var broadcastManager : LocalBroadcastManager
 
+    /**
+     * Requires context in order to initialize our broadcast manager.
+     */
     constructor(context : Context) : this() {
         this.context = context
         this.broadcastManager = LocalBroadcastManager.getInstance(context)
@@ -55,47 +58,30 @@ class GuildDAO() : TeamworkFirestoreDAO() {
     }
 
     /**
-     * This function queries all the documents in the "guilds" collection in Firestore.
+     * This function queries ALL the documents in the "guilds" collection in Firestore.
      * After query, it broadcasts the queried guilds to SearchGuilds.kt
      */
-    fun getAllGuilds(userID : String){
+    fun getAllGuilds(userAuthUid : String){
         queryResults.clear()
 
         var guildIDs : ArrayList<String> = ArrayList()
         try{
-            // Get guild IDs
-            var result = fireStoreDB.collection("guild_members").whereEqualTo("userID", userID)
-                .get()
-                .addOnCompleteListener { it ->
-                    if (it.isSuccessful) {
-                        Log.d(TAG, "Successfully queried user's related guildIDs")
-                        for(document in it.result){
-                            Log.d(TAG, "${document.id} => ${document.data}")
-                            guildIDs.add(document.toObject(GuildMember::class.java).guildID)
-                        }
-                        // Query guilds unrelated to userid
-                        fireStoreDB.collection(fireStoreCollection)
-                            .whereNotIn("__name__", guildIDs)
-                            .get()
-                            .addOnCompleteListener {
-                                if (it.isSuccessful){
-                                    Log.d(TAG, "Successfully queried all guilds not joined by user")
-                                    for (document in it.result){
-                                        Log.d(TAG, "${document.id} => ${document.data}")
-                                        queryResults.add(document.toObject(Guild::class.java))
-                                    }
+            // Setup intent and bundle for broadcast
+            val intent = Intent("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guilds")
+            val bundle = Bundle()
 
-                                    // Broadcast the list of guilds (queryResults) to SearchGuilds
-                                    Log.d(TAG, "Broadcasting queried guilds")
-                                    val intent = Intent("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guilds")
-                                    val bundle = Bundle()
-                                    for (guild in queryResults){
-                                        bundle.putParcelableArrayList("guilds", queryResults as ArrayList<Guild>)
-                                    }
-                                    intent.putExtras(bundle)
-                                    broadcastManager.sendBroadcast(intent)
-                                }
-                            }
+            fireStoreDB.collection(fireStoreCollection)
+                .get()
+                .addOnCompleteListener{
+                    if (it.isSuccessful){
+                        Log.d(TAG,"Successfully queried all guilds")
+                        for (document in it.result) {
+                            Log.d(TAG, "${document.id} => ${document.data}")
+                            queryResults.add(document.toObject(Guild::class.java))
+                        }
+                        bundle.putParcelableArrayList("guilds", queryResults as ArrayList<Guild>)
+                        intent.putExtras(bundle)
+                        broadcastManager.sendBroadcast(intent)
                     }
                 }
         } catch (e: FirebaseFirestoreException) {
@@ -103,51 +89,90 @@ class GuildDAO() : TeamworkFirestoreDAO() {
         }
     }
 
-    fun getMyGuilds(userID: String){
+    /**
+     * Obtains the user's joined guilds.
+     */
+    fun getMyGuilds(userAuthUid: String){
         queryResults.clear()
 
         var guildIDs : ArrayList<String> = ArrayList()
         try{
+            // Setup bundle and intent for broadcast
+            val intent = Intent("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.my_guilds")
+            val bundle = Bundle()
+
             // Get guild IDs
-            var result = fireStoreDB.collection("guild_members").whereEqualTo("userID", userID)
+            var result = fireStoreDB.collection("guild_members").whereEqualTo("userAuthUid", userAuthUid)
                 .get()
                 .addOnCompleteListener { it ->
                     if (it.isSuccessful) {
                         Log.d(TAG, "Successfully queried user's related guildIDs")
                         for(document in it.result){
                             Log.d(TAG, "${document.id} => ${document.data}")
-                            guildIDs.add(document.toObject(GuildMember::class.java).guildID)
+                            guildIDs.add(document.toObject(GuildMember::class.java).guildId)
                         }
-                        // Query guilds unrelated to userid
-                        fireStoreDB.collection(fireStoreCollection)
-                            .whereIn("__name__", guildIDs)
-                            .get()
-                            .addOnCompleteListener {
-                                if (it.isSuccessful){
-                                    Log.d(TAG, "Successfully queried all guilds not joined by user")
-                                    for (document in it.result){
-                                        Log.d(TAG, "${document.id} => ${document.data}")
-                                        queryResults.add(document.toObject(Guild::class.java))
-                                    }
+                        Log.d(TAG, "Size: " + guildIDs.size)
 
-                                    // Broadcast the list of guilds (queryResults) to SearchGuilds
-                                    Log.d(TAG, "Broadcasting queried guilds")
-                                    val intent = Intent("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.my_guilds")
-                                    val bundle = Bundle()
-                                    for (guild in queryResults){
-                                        bundle.putParcelableArrayList("guilds", queryResults as ArrayList<Guild>)
+                        if (guildIDs.size > 0){
+                            Log.d(TAG, "Sending query for all guilds not joined by user")
+                            // Query guilds unrelated to userid
+                            fireStoreDB.collection(fireStoreCollection)
+                                .whereIn("__name__", guildIDs)
+                                .get()
+                                .addOnCompleteListener {
+                                    if (it.isSuccessful) {
+                                        Log.d(
+                                            TAG,
+                                            "Successfully queried all guilds not joined by user"
+                                        )
+                                        for (document in it.result) {
+                                            Log.d(TAG, "${document.id} => ${document.data}")
+                                            queryResults.add(document.toObject(Guild::class.java))
+                                        }
+
+                                        // Broadcast the list of guilds (queryResults) to SearchGuilds
+                                        Log.d(TAG, "Broadcasting queried guilds")
+                                        for (guild in queryResults) {
+                                            bundle.putParcelableArrayList(
+                                                "guilds",
+                                                queryResults as ArrayList<Guild>
+                                            )
+                                        }
+                                        intent.putExtras(bundle)
+                                        broadcastManager.sendBroadcast(intent)
                                     }
-                                    intent.putExtras(bundle)
-                                    broadcastManager.sendBroadcast(intent)
                                 }
-                            }
+                        }
+
+                        else{
+                            bundle.putParcelableArrayList("guilds", ArrayList())
+                            intent.putExtras(bundle)
+                            broadcastManager.sendBroadcast(intent)
+                        }
                     }
                 }
         } catch (e: FirebaseFirestoreException) {
             Log.w(TAG, "Error getting guild documents", e)
         }
     }
-    fun getMyGuildsQuery(guildIDs : ArrayList<String>) : Query {
-        return fireStoreDB.collection(fireStoreCollection).whereIn("__name__", guildIDs)
+
+    /**
+     * Increments the member_count of a certain guild.
+     * Used when a user joins a guild.
+     */
+    fun incrementGuildMemberCount(guildId : String) {
+        fireStoreDB.collection(fireStoreCollection)
+            .document(guildId)
+            .update("member_count", FieldValue.increment(1))
+    }
+
+    /**
+     * Decrements the member_count of a certain guild.
+     * Used when a user leaves a guild.
+     */
+    fun decrementGuildMemberCount(guildId : String) {
+        fireStoreDB.collection(fireStoreCollection)
+            .document(guildId)
+            .update("member_count", FieldValue.increment(-1))
     }
 }

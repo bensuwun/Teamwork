@@ -1,11 +1,13 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
@@ -34,10 +36,18 @@ class AllGuildsAdapter(private var guilds: ArrayList<Guild>, private val context
         /*
         // Use Picasso/Glide here --> String (Download URL) -> Int (Resource ID)
         holder.siv_guild_dp.setImageResource(R.drawable.my_guilds_empty)
-        holder.mbtn_action.text = context.resources.getString(R.string.join_guild_btn)
+        */
         // Define click listener for mbtn_action
+        val bundle = Bundle()
+        bundle.putString("guildId", guild.guildId)
+        bundle.putString("name", guild.name)
+        bundle.putLong("member_count", guild.member_count)
+        bundle.putString("description", guild.description)
+        holder.mbtn_action.setOnClickListener{
+            it.findNavController().navigate(R.id.navigateToGuildPreview, bundle)
+        }
 
-         */
+
     }
 
     override fun getItemCount() = guilds.size

@@ -5,15 +5,16 @@ import android.os.Parcelable
 import com.google.firebase.firestore.DocumentId
 
 class Guild() : Parcelable{
+    // Reference: https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/DocumentId
     @DocumentId
-    var guildID : String = ""
+    var guildId : String = ""
     var name : String = ""
     var description : String = ""
     lateinit var guild_dp : String
     var member_count : Long = -1
 
     constructor(parcel: Parcel) : this() {
-        guildID = parcel.readString().toString()
+        guildId = parcel.readString().toString()
         name = parcel.readString().toString()
         description = parcel.readString().toString()
         guild_dp = parcel.readString().toString()
@@ -29,15 +30,16 @@ class Guild() : Parcelable{
 
     /**
      * No guild DP, for testing.
+     * TODO: Remove when done
      */
-    constructor(guildID : String, name: String, description: String, member_count: Long) : this() {
+    constructor(guildId : String, name: String, description: String, member_count: Long) : this() {
         this.name = name
         this.description = description
         this.member_count = member_count
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(guildID)
+        parcel.writeString(guildId)
         parcel.writeString(name)
         parcel.writeString(description)
         parcel.writeString(guild_dp)

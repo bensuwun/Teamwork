@@ -23,6 +23,7 @@ import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildMemberDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentMyGuildsBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Guild
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 
 /**
  * A simple [Fragment] subclass.
@@ -45,6 +46,11 @@ class MyGuilds : Fragment() {
             for(guild in guilds) {
                 Log.d("SearchGuilds", guild.name)
             }
+            /*
+            if (guilds.size == 0){
+                fragmentManager.
+            }
+             */
             adapter.setData(guilds)
         }
     }
@@ -68,13 +74,12 @@ class MyGuilds : Fragment() {
         binding.rvMyGuilds.layoutManager = LinearLayoutManager(context)
         binding.rvMyGuilds.adapter = adapter
 
-
         // Register broadcast receiver
         LocalBroadcastManager.getInstance(requireContext())
             .registerReceiver(broadcastReceiver, IntentFilter("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.my_guilds"))
 
-        // TODO: Get logged in user's userID
-        guildDAO.getMyGuilds("KZpVJ7lrdSO2DMSpm9nK")
+        // Get user's guilds
+        UserPreferences.getUserAuthUid()?.let { guildDAO.getMyGuilds(it) }
 
         // Set event listeners
         setEventHandlers()
@@ -87,5 +92,8 @@ class MyGuilds : Fragment() {
         }
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
+    }
 }
