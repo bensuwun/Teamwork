@@ -5,21 +5,38 @@
     android:layout_height="100sp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/task_cover_image_small"
+    <LinearLayout
+        android:id="@+id/task_item_details"
         android:layout_width="130sp"
         android:layout_height="80sp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        android:src="@drawable/ic_tasks"/>
+        app:layout_constraintRight_toLeftOf="@id/task_item_details_2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/task_item_due_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/task_list_due_time"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/task_item_due_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/task_list_due_date"/>
+
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/task_item_details_2"
         android:layout_width="240sp"
         android:layout_height="80sp"
-        app:layout_constraintLeft_toRightOf="@id/task_cover_image_small"
+        app:layout_constraintLeft_toRightOf="@id/task_item_details"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -47,5 +64,15 @@
             android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
+
+    <View
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerHorizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
