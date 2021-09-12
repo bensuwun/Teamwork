@@ -15,6 +15,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters.GuildCommentsAdapter
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.PostDAO
@@ -92,13 +94,14 @@ class ViewPostFragment : Fragment() {
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, intentFilters)
 
         // Retrieve comments
-        postDAO.getComments(guild.name, post.docId)
+        getComments()
+        //postDAO.getComments(guild.name, post.docId)
 
         // Add comment event listener
         binding.ivAddComment.setOnClickListener {
             val text = binding.etComment.text.toString().trim()
             if (text != "") {
-                // TODO: Add comment to firestore
+                // Add comment to firestore
                 newComment.author = UserPreferences(requireContext()).getLoggedInUser()!!
                 newComment.comment = text
                 newComment.date_commented = Timestamp(Date())
@@ -129,6 +132,30 @@ class ViewPostFragment : Fragment() {
         else{
             binding.post.cgTags.visibility = View.GONE
         }
+    }
+
+    private fun getComments() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("guilds")
+            .document(guild.name)
+            .collection("posts")
+            .document(post.docId)
+            .collection("comments")
+            .orderBy("date_commented", Query.Direction.DESCENDING)
+            .addSnapshotListener { value, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                comments.clear()
+                for (doc in value!!) {
+                    Log.d(TAG, "${doc.id}: ${doc.data}")
+                    comments.add(doc.toObject(Comment::class.java))
+                    adapter.notifyDataSetChanged()
+                }
+                binding.post.tvComments.text = comments.size.toString()
+            }
     }
 
     override fun onStop() {

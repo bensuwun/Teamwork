@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestoreException
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Comment
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Post
@@ -78,6 +79,7 @@ class PostDAO(context : Context) : TeamworkFirestoreDAO() {
     }
 
     /**
+     * UPDATE: UNUSED, integrated data fetching inside ViewPostFragment for realtime updates
      * Gets the comments of a given post in a guild.
      * Guild -> Post -> Comments
      */
@@ -139,7 +141,14 @@ class PostDAO(context : Context) : TeamworkFirestoreDAO() {
                     Log.d(TAG, "Successfully added comment")
                     bundle.putString("docId", it.id)
                     intent.putExtras(bundle)
-                    broadcastManager.sendBroadcast(intent)
+                    fireStoreDB.collection(fireStoreCollection)
+                        .document(guildId)
+                        .collection(postsCollection)
+                        .document(postId)
+                        .update("comments", FieldValue.increment(1))
+                        .addOnSuccessListener {
+                            broadcastManager.sendBroadcast(intent)
+                        }
                 }
         } catch(e: FirebaseFirestoreException) {
             Log.e(TAG, e.message.toString())
