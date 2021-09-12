@@ -21,11 +21,13 @@
         app:layout_constraintTop_toBottomOf="@id/post"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_comment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp"/>
 
     <!-- Comment -->
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/bottom_comment"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +39,7 @@
         android:weightSum="10">
 
         <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="9"
@@ -52,7 +55,7 @@
             android:maxLines="5"/>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_add_emoji"
+            android:id="@+id/iv_add_comment"
             android:layout_width="0dp"
             android:layout_height="25dp"
             app:srcCompat="@drawable/ic_baseline_send_24"

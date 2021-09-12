@@ -14,10 +14,12 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildMemberDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentGuildPreviewBinding
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Guild
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 
 /**
@@ -28,12 +30,7 @@ class GuildPreviewFragment : Fragment() {
     private val TAG = "GuildPreviewFragment"
 
     // Guild Information
-    private lateinit var guildId : String
-    private lateinit var name : String
-    private var memberCount : Long = 0
-    private lateinit var description : String
-    private lateinit var guildImg : String
-    private lateinit var guildHeader : String
+    private lateinit var guild : Guild
 
     // Broadcast variables
     private val intentMemberCheck = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guild_member"
@@ -44,20 +41,16 @@ class GuildPreviewFragment : Fragment() {
             if (intent != null) {
                 when(intent.action){
                     intentMemberCheck -> {
-                        var bundle = intent?.extras
-                        var isAMember = bundle?.getBoolean("isAMember")
+                        val bundle = intent.extras
+                        val isAMember = bundle?.getBoolean("isAMember")
                         if (isAMember == true){
                             binding.mbtnAction.isEnabled = false
                         }
                     }
                     intentJoinedGuild -> {
-                        val bundle = bundleOf(
-                            "guildId" to guildId,
-                            "name" to name,
-                            "member_count" to memberCount,
-                            "description" to description
-                        )
-                        Toast.makeText(context, "Successfully joined $name", Toast.LENGTH_SHORT).show()
+                        val bundle = Bundle()
+                        bundle.putParcelable("guild", guild)
+                        Toast.makeText(context, "Successfully joined ${guild.name}", Toast.LENGTH_SHORT).show()
                         findNavController().navigate(R.id.fromGuildPreviewNavigateToDashboard, bundle)
                     }
                 }
@@ -83,9 +76,19 @@ class GuildPreviewFragment : Fragment() {
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, filter)
 
         // Update views
-        binding.tvGuildName.text = name
-        binding.tvGuildMembers.text = getString(R.string.member_count, memberCount)
-        binding.tvGuildDescription.text = description
+        binding.tvGuildName.text = guild.name
+        binding.tvGuildMembers.text = getString(R.string.member_count, guild.memberCount)
+        binding.tvGuildDescription.text = guild.description
+        Glide.with(requireContext())
+            .load(guild.profileImage)
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_placeholder)
+            .into(binding.sivGuildDp)
+        Glide.with(requireContext())
+            .load(guild.headerImage)
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_placeholder)
+            .into(binding.ivGuildHeader)
 
         // Set event handlers
         setEventHandlers()
@@ -98,12 +101,15 @@ class GuildPreviewFragment : Fragment() {
     private fun initGuildInfo() {
         // Set basic guild information
         try{
+            /*
             guildId = arguments?.getString("guildId").toString()
             name = arguments?.getString("name").toString()
             memberCount = arguments?.getLong("member_count", 0)!!
             description = arguments?.getString("description").toString()
+            */
+            guild = arguments?.getParcelable("guild")!!
             UserPreferences.getUserAuthUid()?.let {
-                GuildMemberDAO(requireContext()).isAMemberOf(guildId,
+                GuildMemberDAO(requireContext()).isAMemberOf(guild.name,
                     it
                 )
             }
@@ -121,17 +127,17 @@ class GuildPreviewFragment : Fragment() {
         binding.mbtnAction.setOnClickListener {
             // Set document in guild_members collection
             UserPreferences.getUserAuthUid()?.let { it1 ->
-                GuildMemberDAO(requireContext()).joinGuild(guildId,
+                GuildMemberDAO(requireContext()).joinGuild(guild.name,
                     it1
                 )
             }
             // Increment guild member count
-            GuildDAO(requireContext()).incrementGuildMemberCount(guildId)
+            GuildDAO(requireContext()).incrementGuildMemberCount(guild.name)
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
     }
 }

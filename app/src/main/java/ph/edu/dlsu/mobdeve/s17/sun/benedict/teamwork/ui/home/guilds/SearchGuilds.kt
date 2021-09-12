@@ -74,8 +74,8 @@ class SearchGuilds : Fragment() {
     }
 
     // Unregister broadcast receiver
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
     }
 }

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
@@ -29,13 +30,14 @@ class GuildPostsFragment : Fragment() {
     private lateinit var binding : FragmentGuildPostsBinding
     private val TAG = "GuildPostsFragment"
 
+    // Guild information
+    private lateinit var guild : Guild
+
     // RecyclerView variables
     private lateinit var adapter : GuildPostAdapter
-    private lateinit var guildId : String
     private lateinit var posts : ArrayList<Post>
 
     // Broadcast variables
-    private val intentPostsLoaded : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guild_posts_loaded"
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d(TAG, "Broadcast received")
@@ -53,23 +55,25 @@ class GuildPostsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Get data from activity (https://stackoverflow.com/questions/50334550/navigation-architecture-component-passing-argument-data-to-the-startdestination)
+        guild = requireActivity().intent?.extras?.getParcelable<Guild>("guild")!!
+        (activity as AppCompatActivity).supportActionBar?.title = guild.name
+
         // Inflate the layout for this fragment
         binding = FragmentGuildPostsBinding.inflate(inflater, container, false)
         val view = binding.root
 
         // Initialize recyclerView variables
         posts = ArrayList()
-        adapter = GuildPostAdapter(posts, requireContext())
+        adapter = GuildPostAdapter(posts, requireContext(), guild)
 
         // Populate recyclerView
         binding.rvGuildPosts.layoutManager = LinearLayoutManager(activity)
         binding.rvGuildPosts.adapter = adapter
 
         // Obtain posts for this guild (Get intent from parent Activity)
-        // Reference: https://stackoverflow.com/questions/50334550/navigation-architecture-component-passing-argument-data-to-the-startdestination
-        guildId = requireActivity().intent?.extras?.getString("guildId").toString()
-        Log.d(TAG, guildId)
-        PostDAO(requireContext()).getGuildPosts(guildId)
+        Log.d(TAG, guild.name)
+        PostDAO(requireContext()).getGuildPosts(guild.name)
 
         setEventListeners()
 
@@ -78,9 +82,8 @@ class GuildPostsFragment : Fragment() {
 
 
     private fun setEventListeners(){
-        val bundle = bundleOf(
-            "guildId" to guildId
-        )
+        val bundle = Bundle()
+        bundle.putParcelable("guild", guild)
         binding.fabAddPost.setOnClickListener {
             it.findNavController().navigate(R.id.navigateToAddGuildPostFragment, bundle)
         }
@@ -88,8 +91,12 @@ class GuildPostsFragment : Fragment() {
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, IntentFilter(intentPostsLoaded))
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
-        super.onDestroy()
+        super.onStop()
+    }
+
+    companion object {
+       val intentPostsLoaded : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guild_posts_loaded"
     }
 }

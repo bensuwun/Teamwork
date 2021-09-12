@@ -211,7 +211,7 @@ class GuildDAO() : TeamworkFirestoreDAO() {
     fun incrementGuildMemberCount(guildId : String) {
         fireStoreDB.collection(fireStoreCollection)
             .document(guildId)
-            .update("member_count", FieldValue.increment(1))
+            .update("memberCount", FieldValue.increment(1))
     }
 
     /**
@@ -221,6 +221,6 @@ class GuildDAO() : TeamworkFirestoreDAO() {
     fun decrementGuildMemberCount(guildId : String) {
         fireStoreDB.collection(fireStoreCollection)
             .document(guildId)
-            .update("member_count", FieldValue.increment(-1))
+            .update("memberCount", FieldValue.increment(-1))
     }
 }
