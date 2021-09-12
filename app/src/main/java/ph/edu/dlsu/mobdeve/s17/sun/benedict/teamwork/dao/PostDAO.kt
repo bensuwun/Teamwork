@@ -7,22 +7,24 @@ import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestoreException
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Comment
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Post
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Tags
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.posts.AddGuildPostFragment
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.posts.ViewPostFragment
 import java.util.ArrayList
 import kotlin.reflect.typeOf
 
 class PostDAO(context : Context) : TeamworkFirestoreDAO() {
     override val fireStoreCollection: String = "guilds"
     private val postsCollection: String = "posts"
+    private val commentsCollection: String = "comments"
     override var queryResults: ArrayList<Any> = ArrayList()
     override var document: Any? = null
     private val TAG : String = "PostDAO"
 
     // Broadcast variables
-    private var context : Context = context
     private val intentPostsLoaded : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guild_posts_loaded"
-    private val intentPostAdded : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.guild_posts_added"
     private var broadcastManager : LocalBroadcastManager = LocalBroadcastManager.getInstance(context)
 
     /**
@@ -59,18 +61,90 @@ class PostDAO(context : Context) : TeamworkFirestoreDAO() {
     /**
      * Used when user attempts to post in a guild.
      */
-    /*
     fun addGuildPost(guildId : String, data : Post) {
-        val intent = Intent(intentPostAdded)
+        val intent = Intent(AddGuildPostFragment.intentPostAdded)
         try{
             fireStoreDB.collection(fireStoreCollection)
                 .document(guildId)
                 .collection(postsCollection)
+                .add(data)
+                .addOnSuccessListener {
+                    broadcastManager.sendBroadcast(intent)
+                }
 
+        } catch (e : FirebaseFirestoreException) {
+            Log.e(TAG, e.message.toString())
         }
     }
 
+    /**
+     * Gets the comments of a given post in a guild.
+     * Guild -> Post -> Comments
      */
+    fun getComments(guildId : String, postId : String) {
+        val intent = Intent(ViewPostFragment.intentCommentsLoaded)
+        val bundle = Bundle()
+        val comments : ArrayList<Comment> = ArrayList()
+        try {
+            fireStoreDB.collection(fireStoreCollection)
+                .document(guildId)
+                .collection(postsCollection)
+                .document(postId)
+                .collection(commentsCollection)
+                    /*
+                .addSnapshotListener { value, e ->
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e)
+                        return@addSnapshotListener
+                    }
+                    Log.d(TAG, "Retrieving comments")
+                    for (document in value!!) {
+                        Log.d(TAG, "${document.id}: ${document.data}")
+                        comments.add(document.toObject(Comment::class.java))
+                    }
+                    bundle.putParcelableArrayList("comments", comments)
+                    intent.putExtras(bundle)
+                    broadcastManager.sendBroadcast(intent)
+                }
+                     */
+                .get()
+                .addOnSuccessListener {
+                    Log.d(TAG, "Comments retrieved")
+                    for(document in it.documents) {
+                        Log.d(TAG, "${document.id}: ${document.data}")
+                        document.toObject(Comment::class.java)?.let { it1 -> comments.add(it1) }
+                    }
+                    bundle.putParcelableArrayList("comments", comments)
+                    intent.putExtras(bundle)
+                    broadcastManager.sendBroadcast(intent)
+                }
+
+
+        } catch(e: FirebaseFirestoreException) {
+            Log.e(TAG, e.message.toString())
+        }
+    }
+
+    fun addComment(guildId : String, postId : String, data : Comment) {
+        val intent = Intent(ViewPostFragment.intentCommentAdded)
+        val bundle = Bundle()
+        try {
+            fireStoreDB.collection(fireStoreCollection)
+                .document(guildId)
+                .collection(postsCollection)
+                .document(postId)
+                .collection(commentsCollection)
+                .add(data)
+                .addOnSuccessListener {
+                    Log.d(TAG, "Successfully added comment")
+                    bundle.putString("docId", it.id)
+                    intent.putExtras(bundle)
+                    broadcastManager.sendBroadcast(intent)
+                }
+        } catch(e: FirebaseFirestoreException) {
+            Log.e(TAG, e.message.toString())
+        }
+    }
 
     override fun buildHashMap(): HashMap<String, Any> {
         TODO("Not yet implemented")

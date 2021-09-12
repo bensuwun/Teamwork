@@ -1,6 +1,7 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
@@ -32,18 +34,21 @@ class MyGuildsAdapter(private var guilds: ArrayList<Guild>, private val context:
     override fun onBindViewHolder(holder: MyGuildsViewHolder, position: Int) {
         val guild : Guild = guilds[position]
         holder.tv_guild_name.text = guild.name
-        holder.tv_guild_description.text = guild.description
+        // Truncate description if needed
+        holder.tv_guild_description.text = if(guild.description.length < 225) guild.description else "${guild.description.substring(0, 225)}..."
         holder.tv_member_count.text = "Members: ${String.format("%,d", guild.memberCount)}"
         // Use Picasso/Glide here --> String (Download URL) -> Int (Resource ID)
-        holder.siv_guild_dp.setImageResource(R.drawable.my_guilds_empty)
+        Glide.with(context)
+            .load(guild.profileImage)
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_placeholder)
+            .into(holder.siv_guild_dp)
+
         // Define click listener for mbtn_action
         holder.mbtn_action.setOnClickListener {
             // Go to guild's view dashboard
-            val bundle = bundleOf(
-                "name" to guild.name,
-                "member_count" to guild.memberCount,
-                "description" to guild.description
-            )
+            val bundle = Bundle()
+            bundle.putParcelable("guild", guild)
             holder.mbtn_action.findNavController().navigate(R.id.navigateToGuildDashboard, bundle)
         }
     }

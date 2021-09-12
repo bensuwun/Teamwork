@@ -11,7 +11,7 @@ import kotlin.collections.ArrayList
 class Post() : Parcelable{
     @DocumentId
     var docId : String = ""
-    var author : String = ""
+    var author : User = User()
     var title : String = ""
     var description : String = ""
     var tags : Tags = Tags()
@@ -19,8 +19,19 @@ class Post() : Parcelable{
     var comments : Long = 0
     var date_posted : Timestamp = Timestamp(Date())
 
+    constructor(parcel: Parcel) : this() {
+        docId = parcel.readString().toString()
+        author = parcel.readParcelable(User::class.java.classLoader)!!
+        title = parcel.readString().toString()
+        description = parcel.readString().toString()
+        tags = parcel.readParcelable(Tags::class.java.classLoader)!!
+        likes = parcel.readLong()
+        comments = parcel.readLong()
+        date_posted = parcel.readParcelable(Timestamp::class.java.classLoader)!!
+    }
+
     constructor(
-        author: String,
+        author: User,
         title: String,
         description: String,
         likes: Long,
@@ -35,20 +46,9 @@ class Post() : Parcelable{
         this.date_posted = date_posted
     }
 
-    constructor(parcel: Parcel) : this() {
-        docId = parcel.readString().toString()
-        author = parcel.readString().toString()
-        title = parcel.readString().toString()
-        description = parcel.readString().toString()
-        tags = parcel.readParcelable(Tags::class.java.classLoader)!!
-        likes = parcel.readLong()
-        comments = parcel.readLong()
-        date_posted = parcel.readParcelable(Timestamp::class.java.classLoader)!!
-    }
-
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(docId)
-        parcel.writeString(author)
+        parcel.writeParcelable(author, flags)
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeParcelable(tags, flags)

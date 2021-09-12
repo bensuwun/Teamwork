@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
@@ -33,18 +34,23 @@ class AllGuildsAdapter(private var guilds: ArrayList<Guild>, private val context
         holder.tv_guild_name.text = guild.name
         holder.tv_guild_description.text = guild.description
         holder.tv_member_count.text = "Members: ${String.format("%,d", guild.memberCount)}"
-        /*
         // Use Picasso/Glide here --> String (Download URL) -> Int (Resource ID)
-        holder.siv_guild_dp.setImageResource(R.drawable.my_guilds_empty)
-        */
-        // Define click listener for mbtn_action
+        Glide.with(context)
+            .load(guild.profileImage)
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_placeholder)
+            .into(holder.siv_guild_dp)
+
         val bundle = Bundle()
+        /*
         bundle.putString("name", guild.name)
         bundle.putParcelable("master", guild.master)
         bundle.putString("profileImage", guild.profileImage)
         bundle.putString("headerImage", guild.headerImage)
         bundle.putLong("memberCount", guild.memberCount)
         bundle.putString("description", guild.description)
+        */
+        bundle.putParcelable("guild", guild)
 
         holder.mbtn_action.setOnClickListener{
             it.findNavController().navigate(R.id.navigateToGuildPreview, bundle)

@@ -1,6 +1,9 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters
 
 import android.content.Context
+import android.os.Bundle
+import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +14,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -18,12 +22,14 @@ import com.google.android.material.imageview.ShapeableImageView
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Guild
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Post
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.TimestampParser
 import java.util.ArrayList
 
 /**
  * Used to populate the list of posts in Guild Posts activity
  */
-class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: Context) : RecyclerView.Adapter<GuildPostAdapter.GuildPostViewHolder>() {
+class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: Context, private val guild: Guild) : RecyclerView.Adapter<GuildPostAdapter.GuildPostViewHolder>() {
+    private val TAG = "GuildPostAdapter"
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -35,9 +41,14 @@ class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: 
 
     override fun onBindViewHolder(holder: GuildPostViewHolder, position: Int) {
         val post : Post = posts[position]
-        holder.tv_username.text = post.author
+        holder.tv_username.text = post.author.username
+        Glide.with(context)
+            .load(post.author.profileImage)
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.placeholder_guild_dp)
+            .into(holder.siv_user_dp)
         // TODO: Implement date parser
-        holder.tv_date_posted.text
+        holder.tv_date_posted.text = "Posted on: ${TimestampParser(post.date_posted).getDate()}"
         holder.tv_post_description.text = post.description
         holder.tv_post_title.text = post.title
         holder.tv_comments.text = post.comments.toString()
@@ -54,7 +65,11 @@ class GuildPostAdapter(private var posts: ArrayList<Post>, private val context: 
         }
         holder.post_container.setOnClickListener(){
             // View post
-            holder.post_container.findNavController().navigate(R.id.navigateToViewPost)
+            val bundle = Bundle()
+            bundle.putParcelable("guild", guild)
+            bundle.putParcelable("post", post)
+
+            holder.post_container.findNavController().navigate(R.id.navigateToViewPost, bundle)
         }
         // Chips
         if(post.tags.challenge || post.tags.support || post.tags.social){

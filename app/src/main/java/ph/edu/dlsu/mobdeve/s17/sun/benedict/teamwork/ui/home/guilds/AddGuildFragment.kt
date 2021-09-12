@@ -21,11 +21,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildDAO
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildMemberDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentAddGuildBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Guild
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Post
@@ -59,8 +61,17 @@ class AddGuildFragment : Fragment() {
                 intentGuildCreated -> {
                     progressDialog.dismiss()
                     Toast.makeText(context, "Successfully created guild", Toast.LENGTH_SHORT).show()
+                    guildDAO.incrementGuildMemberCount(newGuild.name)
+                    UserPreferences.getUserAuthUid()?.let {
+                        GuildMemberDAO(requireContext()).joinGuild(newGuild.name,
+                            it
+                        )
+                    }
+                    // Navigate to guild dashboard
+                    val bundle = Bundle()
+                    bundle.putParcelable("guild", newGuild)
+                    findNavController().navigate(R.id.fromCreateGuildNavigateToDashboard, bundle)
 
-                    // TODO: Navigate to guild dashboard
                 }
                 intentGuildExists -> {
                     val exists = intent.extras?.getBoolean("exists")

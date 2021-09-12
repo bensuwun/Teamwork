@@ -19,6 +19,7 @@ import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.GuildMemberDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.PostDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentGuildDashboardBinding
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Guild
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.posts.GuildPostsActivity
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 import java.lang.Exception
@@ -31,18 +32,18 @@ class GuildDashboard : Fragment() {
     private val TAG : String = "GuildDashboard"
 
     // Guild Info
-    private lateinit var guildId : String
-    private lateinit var name : String
-    private var memberCount : Long = 0
-    private lateinit var description : String
-    private lateinit var guildImg : String
-    private lateinit var guildHeader : String
+    private lateinit var guild : Guild
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d(TAG, "Broadcast Received")
-            Toast.makeText(context, "You left $name", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.navigateBackToMyGuilds)
+            when(intent?.action) {
+                intentLeftGuild -> {
+                    Toast.makeText(context, "You left ${guild.name}", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.navigateBackToMyGuilds)
+                }
+            }
+
         }
     }
     private val intentLeftGuild : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.left_guild"
@@ -61,7 +62,7 @@ class GuildDashboard : Fragment() {
         val view = binding.root
 
         // Update toolbar
-        (activity as AppCompatActivity).supportActionBar?.title = name
+        (activity as AppCompatActivity).supportActionBar?.title = guild?.name
 
         // Register broadcast receiver
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, IntentFilter(intentLeftGuild))
@@ -75,10 +76,7 @@ class GuildDashboard : Fragment() {
      */
     private fun initGuildInfo() {
         try{
-            guildId = arguments?.getString("guildId").toString()
-            name = arguments?.getString("name").toString()
-            memberCount = arguments?.getLong("member_count", 0)!!
-            description = arguments?.getString("description").toString()
+            guild = arguments?.getParcelable("guild")!!
         } catch(e: Exception) {
             e.message?.let { Log.e(TAG, it) }
         }
@@ -90,12 +88,8 @@ class GuildDashboard : Fragment() {
      *  (2) User clicks Guild Posts
      */
     private fun setEventHandlers(view : View){
-        val bundle = bundleOf(
-            "guildId" to guildId,
-            "name" to name,
-            "member_count" to memberCount,
-            "description" to description
-        )
+        val bundle = Bundle()
+        bundle.putParcelable("guild", guild)
         binding.mcvGuildProfile.setOnClickListener {
             // startActivity(Intent(activity, GuildProfileActivity::class.java))
             view.findNavController().navigate(R.id.navigateToGuildProfileFragment, bundle)
@@ -122,9 +116,9 @@ class GuildDashboard : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.option_leave_guild -> {
-                GuildDAO(requireContext()).decrementGuildMemberCount(guildId)
+                GuildDAO(requireContext()).decrementGuildMemberCount(guild.name)
                 UserPreferences.getUserAuthUid()?.let {
-                    GuildMemberDAO(requireContext()).leaveGuild(guildId,
+                    GuildMemberDAO(requireContext()).leaveGuild(guild.name,
                         it
                     )
                 }
@@ -133,8 +127,8 @@ class GuildDashboard : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
-        super.onDestroy()
+        super.onStop()
     }
 }
