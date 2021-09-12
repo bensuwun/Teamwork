@@ -63,5 +63,7 @@
     <string name="new_task_form_due_time">Due Date:</string>
     <string name="new_task_form_hint_due_time">Set Task Due Time</string>
     <string name="new_task_form_hint_due_date">Set Task Due Date</string>
+    <string name="new_task_due_bold">DUE</string>
+    <string name="new_task_create_task">Create Task</string>
 
 </resources>
