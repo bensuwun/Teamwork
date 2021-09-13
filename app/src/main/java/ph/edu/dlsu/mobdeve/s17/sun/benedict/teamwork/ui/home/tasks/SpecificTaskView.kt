@@ -1,11 +1,10 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.tasks
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentTasksBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentViewTaskBinding
 
@@ -21,6 +20,8 @@ class SpecificTaskView: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Initialize Options Menu
+        setHasOptionsMenu(true)
 
         // Initialize the view binding
         fragmentBinding = FragmentViewTaskBinding.inflate(inflater, container, false)
@@ -32,11 +33,15 @@ class SpecificTaskView: Fragment() {
         this.taskDesc = arguments?.getString("description").toString()
 
         // Apply to views
-        fragmentBinding.taskViewName.setText(taskName)
         fragmentBinding.taskViewAbout.setText(aboutTask)
         fragmentBinding.taskViewDesc.setText(taskDesc)
         (activity as AppCompatActivity).supportActionBar?.title = taskName
 
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.view_task_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 }

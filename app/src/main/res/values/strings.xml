@@ -66,4 +66,13 @@
     <string name="new_task_due_bold">DUE</string>
     <string name="new_task_create_task">Create Task</string>
 
+    <!-- View Task -->
+    <string name="view_task_about_header">About</string>
+    <string name="view_task_description_header">Description</string>
+    <string name="view_task_subtasks_header">Subtasks</string>
+
+    <!-- Menu Titles -->
+    <string name="delete_project_label">Delete Project</string>
+    <string name="delete_task_label">Delete Task</string>
+
 </resources>

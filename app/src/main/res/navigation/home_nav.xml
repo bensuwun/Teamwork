@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/tasksFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.tasks.Tasks"
-        android:label="Tasks"
+        android:label="Tasks | Teamwork"
         tools:layout="@layout/fragment_tasks" >
         <action
             android:id="@+id/navigateToNewTask"
@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/projectsFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.Projects"
-        android:label="Projects"
+        android:label="Projects | Teamwork"
         tools:layout="@layout/fragment_projects" >
         <action
             android:id="@+id/navigateToViewProject"
@@ -33,7 +33,7 @@
     <fragment
         android:id="@+id/guildsFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.Guilds"
-        android:label="Guilds"
+        android:label="Guilds | Teamwork"
         tools:layout="@layout/fragment_guilds" >
         <action
             android:id="@+id/navigateToMyGuildsEmpty"
@@ -54,7 +54,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.Settings"
-        android:label="Settings"
+        android:label="Settings | Teamwork"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/myGuildsEmpty"
@@ -90,7 +90,7 @@
     <fragment
         android:id="@+id/myGuilds"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.MyGuilds"
-        android:label="My Guilds"
+        android:label="My Guilds | Teamwork"
         tools:layout="@layout/fragment_my_guilds">
         <action
             android:id="@+id/navigateToGuildDashboard"
@@ -104,7 +104,7 @@
     <fragment
         android:id="@+id/guildDashboard"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.GuildDashboard"
-        android:label="Guild Dashboard"
+        android:label="Guild Dashboard | Teamwork"
         tools:layout="@layout/fragment_guild_dashboard">
         <action
             android:id="@+id/navigateToGuildPostsActivity"

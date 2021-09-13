@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentReference
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters.TaskAdapter
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentTasksBinding
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.ParcelableDocumentReference
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
 import java.util.*
 import kotlin.collections.ArrayList
@@ -66,7 +67,9 @@ class Tasks : Fragment() {
         Log.d("Tasks:generateDummyData", "Generating $n dummy tasks.")
         val dummyTasks = ArrayList<Task>()
         for (i in 0..n)
-            dummyTasks.add(Task("test_task", "Test Task $i", "Help this task be happy.", "Hi, I am a sad task.", "coverImageUri", Date(), ArrayList<DocumentReference>()))
+            dummyTasks.add(Task("test_task", "Test Task $i", "Help this task be happy.", "Hi, I am a sad task.", Date(), ArrayList<ParcelableDocumentReference>(),
+                ArrayList<String>()
+            ))
         return dummyTasks
     }
 
