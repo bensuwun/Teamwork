@@ -17,19 +17,21 @@ import java.util.*
  *
  * @param name The task name.
  */
-class Task(var name: String) : Serializable, Parcelable {
+class Task() : Serializable, Parcelable {
 
     // Instance Attributes
     @DocumentId
     lateinit var taskId: String
+    lateinit var name: String
     var isFinished: Boolean = false
     var description: String = ""
     var about: String = ""
-    var dueDate: Date? = null
+    var dueDate: Date = Date()
     var subtasks: ArrayList<ParcelableDocumentReference> = ArrayList<ParcelableDocumentReference>()
     lateinit var tags: ArrayList<String>
 
-    constructor(parcel: Parcel) : this(parcel.readString().toString()) {
+    constructor(parcel: Parcel) : this() {
+        this.name = parcel.readString().toString()
         this.taskId = parcel.readString().toString()
         this.about = parcel.readString().toString()
         this.description = parcel.readString().toString()
@@ -50,7 +52,8 @@ class Task(var name: String) : Serializable, Parcelable {
     constructor(
         taskId: String, name: String, description: String,
         about: String, dueDate: Date,
-        subtasks: ArrayList<ParcelableDocumentReference>, tags: ArrayList<String>): this(name) {
+        subtasks: ArrayList<ParcelableDocumentReference>, tags: ArrayList<String>): this() {
+        this.name = name
         this.taskId = taskId
         this.name = name
         this.description = description
