@@ -1,4 +1,8 @@
 <resources>
+
+    <!-- "Environment" Variables -->
+    <string name="firebase_storage_bucket_link">gs://mobdeve-teamwork.appspot.com</string>
+
     <string name="app_name">Teamwork</string>
     <string name="hint_email">Email Address</string>
     <string name="hint_username">Username</string>
@@ -79,5 +83,16 @@
     <!-- Menu Titles -->
     <string name="delete_project_label">Delete Project</string>
     <string name="delete_task_label">Delete Task</string>
+
+    <!-- Settings Page -->
+    <string name="settings_placeholder_username">Grant_Mac_Donald_Hard_A_Farm</string>
+    <string name="settings_edit_username_text">Change Username</string>
+    <string name="settings_logout">Logout</string>
+
+    <!-- Photo Upload Dialog -->
+    <string name="photo_upload_dialog_message">Upload image from Camera or Gallery?</string>
+    <string name="photo_upload_dialog_cancel">Cancel</string>
+    <string name="photo_upload_dialog_camera">Camera</string>
+    <string name="photo_upload_dialog_gallery">Gallery</string>
 
 </resources>
