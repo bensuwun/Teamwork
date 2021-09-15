@@ -24,6 +24,20 @@ class UserDAO(): TeamworkFirestoreDAO() {
     override var queryResults: ArrayList<Any> = ArrayList()
     override var document: Any? = null
 
+    fun createBlankUser(callback: (success: Boolean) -> Unit) {
+        this.fireStoreDB
+            .collection(this.fireStoreCollection)
+            .document((this.document as User).authUid)
+            .set(this.document as User)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+                Log.e("UserDAO:createBlankUser", it.localizedMessage)
+            }
+    }
+
     /**
      * Get User By Auth Id
      * @description This method is used to get the user data based on the user's Firebase auth ID.

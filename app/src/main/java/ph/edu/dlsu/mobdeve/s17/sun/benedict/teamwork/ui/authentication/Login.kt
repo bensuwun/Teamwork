@@ -94,18 +94,34 @@ class Login : Fragment() {
                     val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
                     this.parentActivity.fbAuth.signInWithCredential(credential).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            // SAVE USER TO SHARED PREFERENCES
+                            // CHECK IF THE USER HAS A FIRESTORE ENTRY
                             var userDAO = UserDAO()
                             val userPreferences = UserPreferences(requireContext())
-                            UserPreferences.getUserAuthUid()?.let {
-                                userDAO.getUserByAuthId(it) { success ->
-                                    if (success) {
-                                        userPreferences.saveLoggedInUser(userDAO.document as User)
+                            userDAO.getUserByAuthId(task.result.user!!.uid) {
+                                if(userDAO.document != null) {
+                                    // User account exists - store to UserPreferences
+                                    userPreferences.saveLoggedInUser(userDAO.document as User)
+                                    view.findNavController().navigate(R.id.navigateToHome)
+                                    activity?.finish()
+                                } else {
+                                    // No user account, create a new one
+                                    val newUser = User()
+                                    newUser.authUid = task.result.user!!.uid
+                                    newUser.username = task.result.user!!.email!!.split("@")[0]
+                                    userDAO.document = newUser
+                                    userDAO.createBlankUser {
+                                        if(it) {
+                                            // Store to UserPreferences
+                                            userPreferences.saveLoggedInUser(newUser)
+                                            view.findNavController().navigate(R.id.navigateToHome)
+                                            activity?.finish()
+                                        } else {
+                                            // Reject
+                                            Toast.makeText(requireContext(), "Unable to create new Firestore user.", Toast.LENGTH_LONG).show()
+                                        }
                                     }
                                 }
                             }
-                            view.findNavController().navigate(R.id.navigateToHome)
-                            activity?.finish()
                         } else {
                             Toast.makeText(
                                 this.parentActivity.applicationContext,
