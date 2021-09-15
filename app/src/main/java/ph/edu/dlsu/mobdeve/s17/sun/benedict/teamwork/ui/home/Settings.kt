@@ -97,13 +97,13 @@ class Settings : Fragment() {
         // Set the username
         val user = UserPreferences(requireContext()).getLoggedInUser()!!
         binding.tvSettingsUsername.setText(user.username)
-        resetProfileImage(binding.root)
+        resetProfileImage()
 
         // Inflate the layout for this fragment
         return binding.root
     }
 
-    fun resetProfileImage(v: View) {
+    fun resetProfileImage() {
         val user = UserPreferences(requireContext()).getLoggedInUser()!!
         val dlUrl = user.profileImage
 
@@ -114,7 +114,7 @@ class Settings : Fragment() {
         storageReference.getBytes(1024*1024*15)
             .addOnSuccessListener {
                 val bmp = BitmapFactory.decodeByteArray(it, 0, it.size)
-                val image: ImageView = v.findViewById(R.id.siv_settings_user_dp) as ImageView
+                val image: ImageView = binding.root.findViewById(R.id.siv_settings_user_dp) as ImageView
                 image.setImageBitmap(
                     Bitmap.createScaledBitmap(
                         bmp,
@@ -161,8 +161,11 @@ class Settings : Fragment() {
                                 userDAO.document = user
                                 userDAO.updateDocument(user.authUid) {
                                     // If successful, update UserPreferences
-                                    if(it) UserPreferences(requireContext()).saveLoggedInUser(user)
-                                    else Toast.makeText(requireContext(), "Failed to update profile uri!", Toast.LENGTH_LONG).show()
+                                    if(it) {
+                                        UserPreferences(requireContext()).saveLoggedInUser(user)
+                                        resetProfileImage()
+                                    }
+                                    else { Toast.makeText(requireContext(), "Failed to update profile uri!", Toast.LENGTH_LONG).show() }
                                 }
                             }
 

@@ -26,7 +26,11 @@
         android:id="@+id/register"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication.Register"
         android:label="fragment_register"
-        tools:layout="@layout/fragment_register" />
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/navigateToHome"
+            app:destination="@id/homeActivity" />
+    </fragment>
     <fragment
         android:id="@+id/login"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication.Login"

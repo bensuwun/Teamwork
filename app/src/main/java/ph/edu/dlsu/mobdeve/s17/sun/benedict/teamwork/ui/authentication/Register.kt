@@ -6,9 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.UserDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentRegisterBinding
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.User
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 
 /**
  * A simple [Fragment] subclass.
@@ -53,9 +57,25 @@ class Register : Fragment() {
                 return@setOnClickListener
             }
 
-            this.auth.createUserWithEmailAndPassword(emailAddress, password).addOnCompleteListener { task ->
+            this.auth.createUserWithEmailAndPassword(emailAddress, password)
+                .addOnSuccessListener { task ->
+                    val newUser = User()
+                    newUser.authUid = task.user!!.uid
+                    newUser.profileImage = ""
+                    newUser.username = username
 
-            }
+                    val userDAO = UserDAO()
+                    userDAO.document = newUser
+                    userDAO.createBlankUser {
+                        // Save to UserPreferences if good then login
+                        UserPreferences(requireContext()).saveLoggedInUser(newUser)
+                        findNavController().navigate(R.id.navigateToHome)
+                        requireActivity().finish()
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(requireContext(), "Failed to create new user: " + e.localizedMessage, Toast.LENGTH_LONG).show()
+                }
         }
     }
 
