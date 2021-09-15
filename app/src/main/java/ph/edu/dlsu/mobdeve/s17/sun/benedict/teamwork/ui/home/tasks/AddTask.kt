@@ -124,4 +124,9 @@ class AddTask: Fragment() {
 
         return v
     }
+
+    override fun onStop() {
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
+        super.onStop()
+    }
 }

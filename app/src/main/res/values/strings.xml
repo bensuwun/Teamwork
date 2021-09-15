@@ -71,6 +71,11 @@
     <string name="view_task_description_header">Description</string>
     <string name="view_task_subtasks_header">Subtasks</string>
 
+    <!-- Edit Task -->
+    <string name="edit_task_about_hint">About this task</string>
+    <string name="edit_task_name_hint">Task Name</string>
+    <string name="edit_task_desc_hint">Task Description</string>
+
     <!-- Menu Titles -->
     <string name="delete_project_label">Delete Project</string>
     <string name="delete_task_label">Delete Task</string>

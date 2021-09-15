@@ -28,6 +28,8 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
     private val intentFailedTaskCreate : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.create_user_task_failed"
     private val intentDeleteTaskSuccess : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_user_task"
     private val intentDeleteTaskFailure : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_user_task_failed"
+    private val intentUpdateTaskSuccess : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task"
+    private val intentUpdateTaskFailure : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task_failed"
     private var broadcastManager : LocalBroadcastManager = LocalBroadcastManager.getInstance(ctx)
 
     override fun buildHashMap(): HashMap<String, Any> {
@@ -108,6 +110,24 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
             .addOnFailureListener { e ->
                 Log.e("TaskDAO:deleteTask", e.toString())
                 val taskIntent = Intent(intentDeleteTaskFailure)
+                broadcastManager.sendBroadcast(taskIntent)
+            }
+    }
+
+    fun updateTask(userId: String) {
+        this.fireStoreDB
+            .collection(this.fireStoreCollection)
+            .document(userId)
+            .collection(this.taskCollection)
+            .document((this.document as Task).taskId)
+            .set(this.document as Task)
+            .addOnSuccessListener {
+                val taskIntent = Intent(intentUpdateTaskSuccess)
+                broadcastManager.sendBroadcast(taskIntent)
+            }
+            .addOnFailureListener { e ->
+                Log.e("TaskDAO:updateTask", e.toString())
+                val taskIntent = Intent(intentUpdateTaskFailure)
                 broadcastManager.sendBroadcast(taskIntent)
             }
     }

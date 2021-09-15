@@ -30,6 +30,8 @@ class SpecificTaskView: Fragment() {
 
     lateinit var task: Task
 
+    var editMode: Boolean = false
+
     private val broadcastReceiver = object: BroadcastReceiver() {
         override fun onReceive(ctx: Context?, intent: Intent?) {
             when(intent?.action) {
@@ -41,6 +43,12 @@ class SpecificTaskView: Fragment() {
                 "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_user_task_failed" -> {
                     // Show failed to delete message
                     Toast.makeText(requireContext(), "Failed to delete task.", Toast.LENGTH_LONG).show()
+                }
+                "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task" -> {
+                    Toast.makeText(requireContext(), "Successfully updated the task.", Toast.LENGTH_LONG).show()
+                }
+                "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task_failed" -> {
+                    Toast.makeText(requireContext(), "Failed to update task.", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -77,7 +85,58 @@ class SpecificTaskView: Fragment() {
         val intentFilter = IntentFilter()
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_user_task")
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_user_task_failed")
+        intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task")
+        intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task_failed")
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, intentFilter)
+
+        // Initialize OnClickListener for the FAB
+        this.fragmentBinding.fabEditTask.setOnClickListener { v ->
+            if(editMode) {
+                // Set the icon back to the pencil
+                // Commit changes
+                fragmentBinding.taskViewAbout.visibility = View.VISIBLE
+                fragmentBinding.taskViewDesc.visibility = View.VISIBLE
+                fragmentBinding.viewTaskDueDateTime.visibility = View.VISIBLE
+                fragmentBinding.etTaskDescription.visibility = View.GONE
+                fragmentBinding.etTaskViewAbout.visibility = View.GONE
+                fragmentBinding.etTaskViewName.visibility = View.GONE
+                fragmentBinding.etTaskViewDue.visibility = View.GONE
+                fragmentBinding.fabEditTask.setImageResource(R.drawable.ic_baseline_edit_24)
+
+                // Commit to the task object then call the DAO
+                task.name = fragmentBinding.etTaskViewName.text.toString()
+                task.about = fragmentBinding.etTaskViewAbout.text.toString()
+                task.description = fragmentBinding.etTaskDescription.text.toString()
+                (activity as AppCompatActivity).supportActionBar?.title = task.name
+                fragmentBinding.taskViewAbout.setText(task.about)
+                fragmentBinding.taskViewDesc.setText(task.description)
+                fragmentBinding.etTaskViewDue.setText(task.dueDate.toString().subSequence(0, 19))
+
+                val taskDAO = TaskDAO(requireContext())
+                taskDAO.document = task
+                UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateTask(it.authUid) }
+
+            } else {
+                // Migrate Values
+                fragmentBinding.etTaskViewName.setText(task.name)
+                fragmentBinding.etTaskViewAbout.setText(task.about)
+                fragmentBinding.etTaskDescription.setText(task.description)
+                fragmentBinding.etTaskViewDue.setText(fragmentBinding.viewTaskDueDateTime.text.toString())
+
+                // Set edit texts to visible, hide text views
+                fragmentBinding.taskViewAbout.visibility = View.GONE
+                fragmentBinding.taskViewDesc.visibility = View.GONE
+                fragmentBinding.viewTaskDueDateTime.visibility = View.GONE
+                fragmentBinding.etTaskDescription.visibility = View.VISIBLE
+                fragmentBinding.etTaskViewAbout.visibility = View.VISIBLE
+                fragmentBinding.etTaskViewName.visibility = View.VISIBLE
+                fragmentBinding.etTaskViewDue.visibility = View.VISIBLE
+                fragmentBinding.fabEditTask.setImageResource(R.drawable.ic_baseline_done_24)
+            }
+
+            // Flip the edit mode
+            editMode = !editMode
+        }
 
         return view
     }
@@ -97,5 +156,10 @@ class SpecificTaskView: Fragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStop() {
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
+        super.onStop()
     }
 }
