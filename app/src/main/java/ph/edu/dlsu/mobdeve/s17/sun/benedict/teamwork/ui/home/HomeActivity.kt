@@ -49,25 +49,25 @@ class HomeActivity : AppCompatActivity() {
 
         // Get User Data from Firestore
         val userDAO = UserDAO()
-
-        userDAO.getUserByAuthId(fireBaseUser!!.uid) { success ->
-            if(!success) {
-                Toast.makeText(this.applicationContext, "An error occurred that logged you out.", Toast.LENGTH_LONG).show()
-                // Sign out from Firebase
-                FirebaseAuth.getInstance().signOut()
-                // Sign out from Google
-                GoogleSignIn.getClient(applicationContext,
-                    GoogleSignInOptions.Builder(
-                    GoogleSignInOptions.DEFAULT_SIGN_IN).build()).signOut()
-                // Go back to MainActivity
-                val mainActivityIntent = Intent(applicationContext, MainActivity::class.java)
-                startActivity(mainActivityIntent)
-                finish()
-            } else {
-                // Set user data
-                this.activeUser = userDAO.document as User
+        if(fireBaseUser != null)
+            userDAO.getUserByAuthId(fireBaseUser!!.uid) { success ->
+                if(!success) {
+                    Toast.makeText(this.applicationContext, "An error occurred that logged you out.", Toast.LENGTH_LONG).show()
+                    // Sign out from Firebase
+                    FirebaseAuth.getInstance().signOut()
+                    // Sign out from Google
+                    GoogleSignIn.getClient(applicationContext,
+                        GoogleSignInOptions.Builder(
+                        GoogleSignInOptions.DEFAULT_SIGN_IN).build()).signOut()
+                    // Go back to MainActivity
+                    val mainActivityIntent = Intent(applicationContext, MainActivity::class.java)
+                    startActivity(mainActivityIntent)
+                    finish()
+                } else {
+                    // Set user data
+                    this.activeUser = userDAO.document as User
+                }
             }
-        }
 
 
         // FragmentContainerView is currently not friendly, so we need to use supportFragmentManager to obtain the fragment

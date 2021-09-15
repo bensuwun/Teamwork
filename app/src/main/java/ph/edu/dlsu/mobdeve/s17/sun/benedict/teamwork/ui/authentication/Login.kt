@@ -57,7 +57,7 @@ class Login : Fragment() {
                     Log.d(TAG, authResult.exception.toString())
                     Log.d(TAG, binding.editTextEmail.text.toString())
                     Log.d(TAG, binding.editTextPassword.text.toString())
-                    if (authResult.isSuccessful) {
+                    if (authResult.result.user != null) {
                         view.findNavController().navigate(R.id.navigateToHome)
                         activity?.finish()
                     } else {
@@ -69,7 +69,6 @@ class Login : Fragment() {
                     }
                 }
             }
-            view.findNavController().navigate(R.id.navigateToHome)
         }
         
         // Configure Google Sign-In
