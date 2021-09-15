@@ -1,6 +1,7 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -29,6 +30,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
