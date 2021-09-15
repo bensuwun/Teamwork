@@ -83,16 +83,6 @@ class Tasks : Fragment() {
         return view
     }
 
-    private fun generateDummyData(n: Int): ArrayList<Task> {
-        Log.d("Tasks:generateDummyData", "Generating $n dummy tasks.")
-        val dummyTasks = ArrayList<Task>()
-        for (i in 0..n)
-            dummyTasks.add(Task("test_task", "Test Task $i", "Help this task be happy.", "Hi, I am a sad task.", Date(), ArrayList<ParcelableDocumentReference>(),
-                ArrayList<String>()
-            ))
-        return dummyTasks
-    }
-
     override fun onStop() {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
         super.onStop()

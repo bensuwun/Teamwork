@@ -24,6 +24,10 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
 
     // Broadcaster Variables
     private val intentLoadedTasks : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.all_user_tasks_loaded"
+    private val intentCreatedTask : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.created_user_task"
+    private val intentFailedTaskCreate : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.create_user_task_failed"
+    private val intentDeleteTaskSuccess : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_user_task"
+    private val intentDeleteTaskFailure : String = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_user_task_failed"
     private var broadcastManager : LocalBroadcastManager = LocalBroadcastManager.getInstance(ctx)
 
     override fun buildHashMap(): HashMap<String, Any> {
@@ -33,7 +37,7 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
             "about" to task.about,
             "description" to task.description,
             "dueDate" to task.dueDate,
-            "isCompleted" to task.isFinished,
+            "isCompleted" to task.isCompleted,
             "tags" to task.tags
         )
     }
@@ -48,7 +52,7 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
         }
 
         return Task(
-            document.id, document["name"] as String, document["description"] as String,
+            document.id, document["name"] as String, document["description"] as String, document["isCompleted"] as Boolean,
             document["about"] as String, document["dueDate"] as Date, subtaskParcelableReferences,
             document["tags"] as ArrayList<String>
         )
@@ -69,6 +73,42 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
             }
             .addOnFailureListener { t ->
                 Log.e("TaskDAO:getAllUserTasks", t.toString())
+            }
+    }
+
+    fun createNewTask(userId: String) {
+        this.fireStoreDB
+            .collection(this.fireStoreCollection)
+            .document(userId)
+            .collection(this.taskCollection)
+            .document()
+            .set(this.document as Task)
+            .addOnSuccessListener { t ->
+                val taskIntent = Intent(intentCreatedTask)
+                broadcastManager.sendBroadcast(taskIntent)
+            }
+            .addOnFailureListener { e ->
+                Log.e("TaskDAO:createNewTask", e.toString())
+                val taskIntent = Intent(intentFailedTaskCreate)
+                broadcastManager.sendBroadcast(taskIntent)
+            }
+    }
+
+    fun deleteTask(userId: String) {
+        this.fireStoreDB
+            .collection(this.fireStoreCollection)
+            .document(userId)
+            .collection(this.taskCollection)
+            .document((this.document as Task).taskId)
+            .delete()
+            .addOnSuccessListener {
+                val taskIntent = Intent(intentDeleteTaskSuccess)
+                broadcastManager.sendBroadcast(taskIntent)
+            }
+            .addOnFailureListener { e ->
+                Log.e("TaskDAO:deleteTask", e.toString())
+                val taskIntent = Intent(intentDeleteTaskFailure)
+                broadcastManager.sendBroadcast(taskIntent)
             }
     }
 }

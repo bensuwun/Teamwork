@@ -23,9 +23,9 @@ class Task() : Serializable, Parcelable {
     @DocumentId
     lateinit var taskId: String
     lateinit var name: String
-    var isFinished: Boolean = false
     var description: String = ""
     var about: String = ""
+    var isCompleted: Boolean = false
     var dueDate: Date = Date()
     var subtasks: ArrayList<ParcelableDocumentReference> = ArrayList<ParcelableDocumentReference>()
     lateinit var tags: ArrayList<String>
@@ -35,6 +35,7 @@ class Task() : Serializable, Parcelable {
         this.taskId = parcel.readString().toString()
         this.about = parcel.readString().toString()
         this.description = parcel.readString().toString()
+        this.isCompleted = parcel.readInt() == 1
         this.dueDate = parcel.readSerializable() as Date
         this.subtasks = parcel.readArrayList(ParcelableDocumentReference::class.java.classLoader) as ArrayList<ParcelableDocumentReference>
         parcel.readStringList(this.tags)
@@ -50,13 +51,26 @@ class Task() : Serializable, Parcelable {
      * @param subtasks The ArrayList of subtasks that belong to this parent task.
      */
     constructor(
-        taskId: String, name: String, description: String,
+        taskId: String, name: String, description: String, finished: Boolean,
         about: String, dueDate: Date,
         subtasks: ArrayList<ParcelableDocumentReference>, tags: ArrayList<String>): this() {
         this.name = name
         this.taskId = taskId
+        this.description = description
+        this.isCompleted = finished
+        this.about = about
+        this.dueDate = dueDate
+        this.subtasks = subtasks
+        this.tags = tags
+    }
+
+    constructor(
+        name: String, description: String, finished: Boolean,
+        about: String, dueDate: Date,
+        subtasks: ArrayList<ParcelableDocumentReference>, tags: ArrayList<String>): this() {
         this.name = name
         this.description = description
+        this.isCompleted = finished
         this.about = about
         this.dueDate = dueDate
         this.subtasks = subtasks
@@ -72,6 +86,7 @@ class Task() : Serializable, Parcelable {
         parcel.writeString(this.taskId)
         parcel.writeString(this.about)
         parcel.writeString(this.description)
+        parcel.writeInt(if (this.isCompleted) 1 else 0)
         parcel.writeSerializable(this.dueDate)
         parcel.writeTypedList(this.subtasks)
         parcel.writeStringList(this.tags)
@@ -85,6 +100,10 @@ class Task() : Serializable, Parcelable {
         override fun newArray(size: Int): Array<Task?> {
             return arrayOfNulls(size)
         }
+    }
+
+    override fun toString(): String {
+        return "${this.name}\n${this.about}\n${this.description}\n${this.isCompleted}\n${this.dueDate.toString()}"
     }
 
 }

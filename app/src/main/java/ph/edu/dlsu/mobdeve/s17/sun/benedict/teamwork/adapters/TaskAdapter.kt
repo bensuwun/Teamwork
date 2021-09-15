@@ -1,6 +1,7 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters
 
 import android.content.Context
+import android.os.Parcel
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TaskAdapter(val tasks: ArrayList<Task>, val context: Context): RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
@@ -32,14 +35,21 @@ class TaskAdapter(val tasks: ArrayList<Task>, val context: Context): RecyclerVie
 
         holder.tvTaskAbout.setText(task.about)
         holder.tvTaskName.setText(task.name)
+        holder.tvTaskDate.setText(task.dueDate.toString().subSequence(0, 10))
+        holder.tvTaskTime.setText(task.dueDate.toString().subSequence(11, 19))
+
+        // Check if the task is overdue
+        if(task.dueDate.before(Date())) {
+            // Set colors to red
+            holder.tvTaskDate.setTextColor(context.resources.getColor(R.color.warning_red))
+            holder.tvTaskTime.setTextColor(context.resources.getColor(R.color.warning_red))
+        }
 
         // Initialize onClickListener
         holder.ltTaskCard.setOnClickListener {
             // Bundle up data to send
             val bundle = bundleOf(
-                "taskName" to task.name,
-                "aboutTask" to task.about,
-                "description" to task.description
+                "taskObject" to task
             )
             holder.ltTaskCard.findNavController().navigate(R.id.navigateToTaskView, bundle)
         }
