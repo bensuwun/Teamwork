@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/layout/fragment_landing.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_my_guilds.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/fragment_my_guilds_empty.xml" value="0.2953125" />
+        <entry key="app/src/main/res/layout/fragment_new_subtask.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_new_task.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_projects.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/fragment_register.xml" value="0.2980072463768116" />

@@ -201,4 +201,17 @@
         android:src="@drawable/ic_baseline_edit_24"
         />
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/view_task_extended_fab_text"
+        app:icon="@drawable/ic_baseline_add_24"
+        android:id="@+id/fab_new_subtask"
+        app:layout_constraintTop_toTopOf="@id/fab_edit_task"
+        app:layout_constraintRight_toLeftOf="@id/fab_edit_task"
+        app:layout_constraintBottom_toBottomOf="@id/fab_edit_task"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias=".9"
+        android:backgroundTint="@color/app_orange"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

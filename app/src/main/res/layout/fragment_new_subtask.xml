@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="350sp"
+        android:layout_height="600sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:cardCornerRadius="15sp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/add_new_task_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_subtask"
+                android:textStyle="bold"
+                android:textSize="32sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10sp"/>
+
+            <View
+                android:id="@+id/divider_new_task"
+                app:layout_constraintTop_toBottomOf="@id/add_new_task_header"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/dividerHorizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10sp"
+                android:layout_marginRight="10sp"/>
+
+            <LinearLayout
+                android:layout_margin="10sp"
+                app:layout_constraintTop_toBottomOf="@id/divider_new_task"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="500sp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_task_form_task_name"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="10sp"/>
+
+                <EditText
+                    android:id="@+id/et_task_name"
+                    android:layout_width="310sp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:hint="@string/new_task_form_hint_task_name"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_task_form_about"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="10sp"/>
+
+                <EditText
+                    android:id="@+id/et_task_about"
+                    android:layout_width="310sp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:hint="@string/new_task_form_hint_about"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_task_form_description"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="10sp"/>
+
+
+                <EditText
+                    android:id="@+id/et_task_description"
+                    android:layout_width="310sp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:hint="@string/new_task_form_hint_description"/>
+
+                <Button
+                    android:id="@+id/btn_new_task_set_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_task_form_hint_due_time"
+                    android:layout_gravity="center"
+                    android:onClick="showTimePickerDialog" />
+
+                <Button
+                    android:id="@+id/btn_new_task_set_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_task_form_hint_due_date"
+                    android:layout_gravity="center"
+                    android:onClick="showDatePickerDialog" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_task_due_bold"
+                    android:layout_gravity="center"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10sp"/>
+
+                <TextView
+                    android:id="@+id/new_task_due_time_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/task_list_due_time"
+                    android:layout_gravity="center"
+                    android:textSize="24sp"
+                    android:layout_marginTop="10sp"/>
+
+                <TextView
+                    android:id="@+id/new_task_due_date_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/task_list_due_date"
+                    android:layout_gravity="center"
+                    android:textSize="24sp"
+                    android:layout_marginTop="10sp"/>
+
+                <Button
+                    android:id="@+id/btn_create_new_task"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_task_create_task"
+                    android:layout_marginTop="10sp"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

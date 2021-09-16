@@ -70,10 +70,14 @@
     <string name="new_task_due_bold">DUE</string>
     <string name="new_task_create_task">Create Task</string>
 
+    <!-- New Subtask View -->
+    <string name="new_subtask">Add a Subtask</string>
+
     <!-- View Task -->
     <string name="view_task_about_header">About</string>
     <string name="view_task_description_header">Description</string>
     <string name="view_task_subtasks_header">Subtasks</string>
+    <string name="view_task_extended_fab_text">Subtask</string>
 
     <!-- Edit Task -->
     <string name="edit_task_about_hint">About this task</string>
