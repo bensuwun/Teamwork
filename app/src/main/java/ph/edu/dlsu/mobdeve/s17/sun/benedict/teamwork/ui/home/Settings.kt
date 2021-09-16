@@ -18,18 +18,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.Scope
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
-import com.google.api.client.http.javanet.NetHttpTransport
-import com.google.api.client.json.jackson2.JacksonFactory
-import com.google.api.services.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
-import com.squareup.okhttp.*
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.UserDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentSettingsBinding
@@ -189,6 +180,36 @@ class Settings : Fragment() {
                 if(data != null) {
                     val imageBitmap = data.extras!!.get("data") as Bitmap
 
+                    // Upload image to Firebase Storage
+                    val storageReference = this.firebaseStorage.getReferenceFromUrl(resources.getString(R.string.firebase_storage_bucket_link))
+                    val referencePath = "user_pictures/" + UserPreferences(requireContext()).getLoggedInUser()!!.authUid + "-" + Date().toString()
+                    var newBitmapPath = storageReference.child(referencePath)
+
+                    val baos = ByteArrayOutputStream()
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                    val data: ByteArray = baos.toByteArray()
+
+                    val uploadTask: UploadTask = newBitmapPath.putBytes(data)
+                    uploadTask
+                        .addOnFailureListener {
+                            // Handle unsuccessful uploads
+                        }
+                        .addOnSuccessListener { taskSnapshot -> // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                            val user = UserPreferences(requireContext()).getLoggedInUser()!!
+                            user.profileImage = referencePath
+
+                            // Update user information
+                            val userDAO = UserDAO()
+                            userDAO.document = user
+                            userDAO.updateDocument(user.authUid) {
+                                // If successful, update UserPreferences
+                                if(it) {
+                                    UserPreferences(requireContext()).saveLoggedInUser(user)
+                                    resetProfileImage()
+                                }
+                                else { Toast.makeText(requireContext(), "Failed to update profile uri!", Toast.LENGTH_LONG).show() }
+                            }
+                        }
                 }
             }
         }

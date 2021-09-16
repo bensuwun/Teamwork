@@ -99,4 +99,22 @@
     <string name="photo_upload_dialog_camera">Camera</string>
     <string name="photo_upload_dialog_gallery">Gallery</string>
 
+    <!-- New Project View -->
+    <string name="new_project">Add a New Project</string>
+    <string name="new_project_form_project_name">Project Name:</string>
+    <string name="new_project_form_hint_project_name">Enter New Project Name</string>
+    <string name="new_project_form_about">About Project:</string>
+    <string name="new_project_form_hint_about">What is the project about?</string>
+    <string name="new_project_form_description">Project Description:</string>
+    <string name="new_project_form_hint_description">Describe this project in detail</string>
+    <string name="new_project_form_due_date">Project Due Date:</string>
+    <string name="new_project_form_due_time">Due Date:</string>
+    <string name="new_project_form_hint_due_time">Set Project Due Time</string>
+    <string name="new_project_form_hint_due_date">Set Project Due Date</string>
+    <string name="new_project_due_bold">DUE</string>
+    <string name="new_project_create_project">Create Project</string>
+    <string name="project_list_due_time">00:00</string>
+    <string name="project_list_due_date">00/00/00</string>
+    <string name="edit_project_image">Choose Image</string>
+
 </resources>
