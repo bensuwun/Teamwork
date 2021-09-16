@@ -93,6 +93,11 @@
         <action
             android:id="@+id/fromTaskViewToNewSubtask"
             app:destination="@id/addSubtaskView"/>
+        <action
+            android:id="@+id/fromTaskViewNavigateBackToTasksFragment"
+            app:destination="@id/tasksFragment"
+            app:popUpTo="@id/tasksFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/searchGuilds"

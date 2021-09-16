@@ -86,9 +86,9 @@ class Login : Fragment() {
         // Configure Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
-            .requestServerAuthCode(getString(R.string.default_web_client_id))
             .requestEmail()
             .requestScopes(Scope(TasksScopes.TASKS))
+            .requestServerAuthCode(getString(R.string.default_web_client_id))
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this.parentActivity, gso)
