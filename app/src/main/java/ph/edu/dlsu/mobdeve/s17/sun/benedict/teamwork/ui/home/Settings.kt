@@ -55,7 +55,7 @@ class Settings : Fragment() {
                 GoogleSignInOptions.DEFAULT_SIGN_IN).build()).signOut()
             val mainActivityIntent = Intent(this.activity?.applicationContext, MainActivity::class.java)
             startActivity(mainActivityIntent)
-            this.activity?.finish()
+            requireActivity().finish()
         }
 
         // Set OnClickListener for upload fab

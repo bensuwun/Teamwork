@@ -58,7 +58,7 @@ class ViewProjectFragment : Fragment() {
         // Apply to views
         fragmentBinding.viewProjectAbout.setText(this.project.about)
         fragmentBinding.viewProjectDesc.setText(this.project.description)
-        fragmentBinding.viewProjectCompletionDate.setText(this.project.completionDate.toString())
+        fragmentBinding.viewProjectCompletionDate.setText("${this.project.completionDate.toString().subSequence(0, 19)}")
         (activity as AppCompatActivity).supportActionBar?.title = this.project.name
         resetProjectImage()
 

@@ -17,7 +17,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
+import com.google.android.gms.tasks.RuntimeExecutionException
 import com.google.api.services.tasks.TasksScopes
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.UserDAO
@@ -36,6 +38,7 @@ class Login : Fragment() {
     lateinit var parentActivity: MainActivity
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
     private lateinit var googleSignInClient: GoogleSignInClient
+    private val fbAuth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,23 +58,18 @@ class Login : Fragment() {
             } else {
                 // Login via Firebase
                 Toast.makeText(it.rootView.context, "Logging in...", Toast.LENGTH_SHORT).show()
-                this.parentActivity.fbAuth.signInWithEmailAndPassword(binding.editTextEmail.text.toString(), binding.editTextPassword.text.toString()).addOnCompleteListener { authResult ->
-                    Log.d(TAG, authResult.exception.toString())
-                    Log.d(TAG, binding.editTextEmail.text.toString())
-                    Log.d(TAG, binding.editTextPassword.text.toString())
-                    if (authResult.result.user != null) {
+                try { this.fbAuth.signInWithEmailAndPassword(binding.editTextEmail.text.toString(), binding.editTextPassword.text.toString()).addOnCompleteListener { authResult ->
+                    if ( authResult.isSuccessful && authResult.result.user != null) {
                         // SAVE USER TO SHARED PREFERENCES
                         var userDAO = UserDAO()
                         val userPreferences = UserPreferences(requireContext())
-                        UserPreferences.getUserAuthUid()?.let {
-                            userDAO.getUserByAuthId(it) { success ->
-                                if (success) {
-                                    userPreferences.saveLoggedInUser(userDAO.document as User)
-                                }
+                        userDAO.getUserByAuthId(authResult.result.user!!.uid) { success ->
+                            if (success) {
+                                userPreferences.saveLoggedInUser(userDAO.document as User)
+                                view.findNavController().navigate(R.id.navigateToHome)
                             }
                         }
-                        view.findNavController().navigate(R.id.navigateToHome)
-                        activity?.finish()
+                        requireActivity().finish()
                     } else {
                         Toast.makeText(
                             it.rootView.context,
@@ -79,7 +77,7 @@ class Login : Fragment() {
                             Toast.LENGTH_LONG
                         ).show()
                     }
-                }
+                }} catch (ex: Exception) { Toast.makeText(requireContext(), ex.localizedMessage, Toast.LENGTH_SHORT) }
             }
         }
         

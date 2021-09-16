@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val currentUser: FirebaseUser? = this.fbAuth.currentUser
-        if(currentUser != null && !currentUser.isAnonymous && currentUser.isEmailVerified) {
+        if(currentUser != null && !currentUser.isAnonymous) {
             // Skip login/register page
             startActivity(Intent(this, HomeActivity::class.java))
             finish()
