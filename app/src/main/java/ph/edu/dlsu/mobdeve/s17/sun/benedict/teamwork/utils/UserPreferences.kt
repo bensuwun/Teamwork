@@ -1,6 +1,8 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils
 
+import android.accounts.AccountManager
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
@@ -49,6 +51,7 @@ class UserPreferences(val context: Context) {
         if (json != ""){
             user = gson.fromJson(json, User::class.java)
         }
+
         return user
     }
 

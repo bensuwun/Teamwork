@@ -8,6 +8,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Comment
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Post
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Tags
@@ -39,6 +40,7 @@ class PostDAO(context : Context) : TeamworkFirestoreDAO() {
             fireStoreDB.collection(fireStoreCollection)
                 .document(guildId)
                 .collection("posts")
+                .orderBy("date_posted", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener {
                     Log.d(TAG, "Querying guild posts")
@@ -93,6 +95,7 @@ class PostDAO(context : Context) : TeamworkFirestoreDAO() {
                 .collection(postsCollection)
                 .document(postId)
                 .collection(commentsCollection)
+                .orderBy("date_commented", Query.Direction.DESCENDING)
                     /*
                 .addSnapshotListener { value, e ->
                     if (e != null) {
