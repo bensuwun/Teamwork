@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
@@ -39,6 +40,8 @@ class ViewProjectFragment : Fragment() {
 
     lateinit var fragmentBinding: FragmentViewProjectBinding
 
+    var editState = false
+
     lateinit var project: Project
 
     override fun onCreateView(
@@ -53,9 +56,9 @@ class ViewProjectFragment : Fragment() {
         this.project = arguments?.getParcelable<Project>("project")!!
 
         // Apply to views
-        fragmentBinding.viewProjectName.setText(this.project.name)
         fragmentBinding.viewProjectAbout.setText(this.project.about)
         fragmentBinding.viewProjectDesc.setText(this.project.description)
+        fragmentBinding.viewProjectCompletionDate.setText(this.project.completionDate.toString())
         (activity as AppCompatActivity).supportActionBar?.title = this.project.name
         resetProjectImage()
 
@@ -69,6 +72,53 @@ class ViewProjectFragment : Fragment() {
                 Intent.createChooser(intent, "Select Picture"),
                 0
             )
+        }
+        fragmentBinding.fabEditProject.setOnClickListener {
+            if(!editState) {
+                fragmentBinding.etViewProjectAbout.setText(fragmentBinding.viewProjectAbout.text.toString())
+                fragmentBinding.etViewProjectDesc.setText(fragmentBinding.viewProjectDesc.text.toString())
+                fragmentBinding.etViewProjectName.setText(project.name)
+
+                fragmentBinding.etViewProjectName.visibility = View.VISIBLE
+                fragmentBinding.etViewProjectDesc.visibility = View.VISIBLE
+                fragmentBinding.etViewProjectAbout.visibility = View.VISIBLE
+                fragmentBinding.btnEditProjectImage.visibility = View.VISIBLE
+
+                fragmentBinding.viewProjectDesc.visibility = View.GONE
+                fragmentBinding.viewProjectAbout.visibility = View.GONE
+                fragmentBinding.fabEditProject.setImageResource(R.drawable.ic_baseline_done_24)
+            } else {
+                fragmentBinding.etViewProjectName.visibility = View.GONE
+                fragmentBinding.etViewProjectDesc.visibility = View.GONE
+                fragmentBinding.etViewProjectAbout.visibility = View.GONE
+                fragmentBinding.btnEditProjectImage.visibility = View.GONE
+
+                fragmentBinding.viewProjectDesc.visibility = View.VISIBLE
+                fragmentBinding.viewProjectAbout.visibility = View.VISIBLE
+                fragmentBinding.fabEditProject.setImageResource(R.drawable.ic_baseline_edit_24)
+
+                // Commit changes
+                this.project.name = fragmentBinding.etViewProjectName.text.toString()
+                this.project.about = fragmentBinding.etViewProjectAbout.text.toString()
+                this.project.description = fragmentBinding.etViewProjectDesc.text.toString()
+
+                val projectDAO = ProjectDAO(requireContext())
+                projectDAO.document = this.project
+                UserPreferences(requireContext()).getLoggedInUser()?.let {
+                    projectDAO.updateProjectCb(it.authUid) {
+                        if(it) {
+                            Toast.makeText(requireContext(), "Updated project information.", Toast.LENGTH_LONG).show()
+
+                            fragmentBinding.viewProjectAbout.setText(this.project.about)
+                            fragmentBinding.viewProjectDesc.setText(this.project.description)
+                            fragmentBinding.viewProjectCompletionDate.setText(this.project.completionDate.toString())
+                        } else {
+                            Toast.makeText(requireContext(), "Failed to update project information.", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+            editState = !editState
         }
 
         return view

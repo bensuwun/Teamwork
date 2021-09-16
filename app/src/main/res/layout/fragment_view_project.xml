@@ -19,19 +19,52 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <EditText
+                android:textAlignment="center"
+                android:hint="About Project"
+                android:textColor="@color/black"
+                android:visibility="gone"
+                android:id="@+id/et_view_project_name"
+                android:layout_width="350sp"
+                android:layout_height="wrap_content"
+                android:text="About Project"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp"
+                android:layout_margin="8sp"/>
+
             <TextView
-                android:id="@+id/view_project_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Project Name"
-                android:layout_gravity="center"
-                android:textStyle="bold"
-                android:textSize="30sp"
-                android:layout_margin="10sp"/>
+                android:text="Estimated Completion Date:"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp"
+                android:layout_margin="8sp"/>
+
+            <TextView
+                android:id="@+id/view_project_completion_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Completion Date"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16sp"
+                android:layout_margin="8sp"/>
 
             <TextView
                 android:id="@+id/view_project_about"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About Project"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16sp"
+                android:layout_margin="8sp"/>
+
+            <EditText
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:hint="About Project"
+                android:visibility="gone"
+                android:id="@+id/et_view_project_about"
+                android:layout_width="350sp"
                 android:layout_height="wrap_content"
                 android:text="About Project"
                 android:layout_gravity="center_horizontal"
@@ -47,6 +80,7 @@
                 android:adjustViewBounds="true"/>
 
             <Button
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -56,6 +90,19 @@
             <TextView
                 android:id="@+id/view_project_desc"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Project Description"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:layout_margin="8sp"/>
+
+            <EditText
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:hint="Project Description"
+                android:visibility="gone"
+                android:id="@+id/et_view_project_desc"
+                android:layout_width="350sp"
                 android:layout_height="wrap_content"
                 android:text="Project Description"
                 android:textSize="16sp"
@@ -83,6 +130,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_edit_project"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -90,6 +138,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintVertical_bias="0.975"
-        app:layout_constraintHorizontal_bias="0.95"/>
+        app:layout_constraintHorizontal_bias="0.95"
+        android:src="@drawable/ic_baseline_edit_24"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
