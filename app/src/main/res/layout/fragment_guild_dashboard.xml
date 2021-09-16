@@ -7,102 +7,49 @@
     android:orientation="vertical"
     android:layout_margin="20dp">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcv_guild_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="5">
+        app:cardBackgroundColor="@color/black"
 
-        <!-- Profile -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mcv_guild_profile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/black"
-            android:layout_weight="2.5"
-            android:layout_marginRight="20dp"
-            app:cardCornerRadius="20dp">
+        app:cardCornerRadius="20dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_guild_profile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="150dp"
+                android:adjustViewBounds="true"
+                android:background="@color/app_lightest_blue"
+                android:src="@drawable/ic_guild_profile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/iv_guild_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:background="@color/app_lightest_blue"
-                    android:src="@drawable/ic_guild_profile"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/app_orange"
+                android:fontFamily="serif-monospace"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Profile"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/iv_guild_profile"
+                app:layout_constraintEnd_toEndOf="@id/iv_guild_profile"
+                app:layout_constraintTop_toBottomOf="@id/iv_guild_profile" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/app_orange"
-                    android:fontFamily="serif-monospace"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="Profile"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@id/iv_guild_profile"
-                    app:layout_constraintEnd_toEndOf="@id/iv_guild_profile"
-                    app:layout_constraintTop_toBottomOf="@id/iv_guild_profile" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Posts -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mcv_guild_posts"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/black"
-            android:layout_weight="2.5"
-
-            app:cardCornerRadius="20dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_guild_posts"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:adjustViewBounds="true"
-                    android:background="@color/app_light_blue"
-                    android:src="@drawable/ic_guild_posts"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/app_orange"
-                    android:fontFamily="serif-monospace"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="Posts"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@id/iv_guild_posts"
-                    app:layout_constraintEnd_toEndOf="@id/iv_guild_posts"
-                    app:layout_constraintTop_toBottomOf="@id/iv_guild_posts" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mcv_guild_challenges"
+        android:id="@+id/mcv_guild_posts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -115,7 +62,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/iv_guild_challenges"
+                android:id="@+id/iv_guild_posts"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:adjustViewBounds="true"
@@ -131,14 +78,14 @@
                 android:fontFamily="serif-monospace"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="Challenges"
+                android:text="Posts"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/iv_guild_challenges"
-                app:layout_constraintEnd_toEndOf="@id/iv_guild_challenges"
-                app:layout_constraintTop_toBottomOf="@id/iv_guild_challenges" />
+                app:layout_constraintStart_toStartOf="@id/iv_guild_posts"
+                app:layout_constraintEnd_toEndOf="@id/iv_guild_posts"
+                app:layout_constraintTop_toBottomOf="@id/iv_guild_posts" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>

@@ -58,6 +58,16 @@ class Login : Fragment() {
                     Log.d(TAG, binding.editTextEmail.text.toString())
                     Log.d(TAG, binding.editTextPassword.text.toString())
                     if (authResult.result.user != null) {
+                        // SAVE USER TO SHARED PREFERENCES
+                        var userDAO = UserDAO()
+                        val userPreferences = UserPreferences(requireContext())
+                        UserPreferences.getUserAuthUid()?.let {
+                            userDAO.getUserByAuthId(it) { success ->
+                                if (success) {
+                                    userPreferences.saveLoggedInUser(userDAO.document as User)
+                                }
+                            }
+                        }
                         view.findNavController().navigate(R.id.navigateToHome)
                         activity?.finish()
                     } else {
