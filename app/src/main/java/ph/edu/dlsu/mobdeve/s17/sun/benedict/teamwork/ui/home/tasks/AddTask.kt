@@ -117,7 +117,7 @@ class AddTask: Fragment() {
                     false,
                     fragmentBinding.etTaskAbout.text.toString(),
                     cal.time,
-                    ArrayList<ParcelableDocumentReference>(),
+                    false,
                     ArrayList<String>()
                 )
 

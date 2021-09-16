@@ -106,6 +106,9 @@
             app:destination="@id/tasksFragment"
             app:popUpTo="@id/tasksFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/navigateToTaskView"
+            app:destination="@id/myTaskView"/>
     </fragment>
     <fragment
         android:id="@+id/searchGuilds"

@@ -80,6 +80,21 @@ class ProjectDAO(ctx: Context) : TeamworkFirestoreDAO() {
             }
     }
 
+    fun deleteProjectCb(userId: String, projectId: String, callback: (success: Boolean) -> Unit) {
+        this.fireStoreDB
+            .collection(this.fireStoreCollection)
+            .document(userId)
+            .collection(this.projectsCollection)
+            .document(projectId)
+            .delete()
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
     // Static Attributes
     companion object {
         val CREATE_PROJECT_SUCCESS_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.create_project_success"

@@ -14,6 +14,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
@@ -27,6 +28,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters.TaskAdapter
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.TaskDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentViewTaskBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
@@ -61,9 +63,34 @@ class SpecificTaskView: Fragment() {
                 "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task_failed" -> {
                     Toast.makeText(requireContext(), "Failed to update task.", Toast.LENGTH_LONG).show()
                 }
+                TaskDAO.GET_TASK_SUBTASKS_SUCCESS_INTENT -> {
+                    // Activate the subtask recycler view
+                    fragmentBinding.subtaskRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    subtaskAdapter = TaskAdapter((intent.extras!!["subtaskList"] as Array<Task>).toCollection(ArrayList()), requireContext())
+                    fragmentBinding.subtaskRecyclerView.adapter = subtaskAdapter
+
+                    // Show the recycler view
+                    if(subtaskAdapter.tasks.size > 0) {
+                        fragmentBinding.emptySubtasksGraphic.visibility = View.GONE
+                        fragmentBinding.subtaskRecyclerView.visibility = View.VISIBLE
+                    }
+                }
+                TaskDAO.GET_TASK_SUBTASKS_FAILURE_INTENT -> {
+                    Toast.makeText(requireContext(), "Failed to query subtasks.", Toast.LENGTH_LONG).show()
+                }
+                TaskDAO.DELETE_SUBTASK_SUCCESS_INTENT -> {
+                    Toast.makeText(requireContext(), "Deleted subtask.", Toast.LENGTH_LONG).show()
+                    findNavController().popBackStack()
+                }
+                TaskDAO.DELETE_SUBTASK_FAILURE_INTENT -> {
+                    Toast.makeText(requireContext(), "Failed to delete subtask.", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
+
+    lateinit var subtaskAdapter: TaskAdapter
+    lateinit var parentTask: Task
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,12 +107,27 @@ class SpecificTaskView: Fragment() {
         this.task = arguments?.getParcelable<Task>("taskObject")!!
 
         // Apply to views
-        Log.d("SpecificTaskView:onCreateView", task.isCompleted.toString())
+        Log.d("SpecificTaskView:onCreateView", task.completed.toString())
         fragmentBinding.taskViewAbout.setText(task.about)
         fragmentBinding.taskViewDesc.setText(task.description)
-        fragmentBinding.taskCheckboxIsDone.isChecked = task.isCompleted
+        fragmentBinding.taskCheckboxIsDone.isChecked = task.completed
         fragmentBinding.viewTaskDueDateTime.setText("${this.task.dueDate.toString().subSequence(0, 19)}")
         (activity as AppCompatActivity).supportActionBar?.title = task.name
+
+        // Check if there are subtasks
+        if(!task.isSubtask) {
+            val subtaskDAO = TaskDAO(requireContext())
+            UserPreferences(requireContext()).getLoggedInUser()?.let {
+                subtaskDAO.getSubtasks(it.authUid, task.taskId)
+            }
+        }
+
+        if(task.isSubtask) {
+            fragmentBinding.taskItemCard2.visibility = View.GONE
+            fragmentBinding.fabNewSubtask.visibility = View.GONE
+
+            //this.parentTask = arguments?.getParcelable<Task>("parentTask")!!
+        }
 
         // Check if the task is overdue
         if(task.dueDate.before(Date())) {
@@ -99,6 +141,10 @@ class SpecificTaskView: Fragment() {
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_user_task_failed")
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task")
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task_failed")
+        intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_SUCCESS_INTENT)
+        intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_FAILURE_INTENT)
+        intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_SUCCESS_INTENT)
+        intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_FAILURE_INTENT)
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, intentFilter)
 
         // Initialize OnClickListener for the FAB
@@ -157,6 +203,14 @@ class SpecificTaskView: Fragment() {
             )
              findNavController().navigate(R.id.fromTaskViewToNewSubtask, taskBundle)
         }
+        fragmentBinding.taskCheckboxIsDone.setOnClickListener { v ->
+            val taskDAO = TaskDAO(requireContext())
+            this.task.completed = fragmentBinding.taskCheckboxIsDone.isChecked
+            taskDAO.document = this.task
+            UserPreferences(requireContext()).getLoggedInUser()?.let {
+                taskDAO.updateTask(it.authUid)
+            }
+        }
 
         return view
     }
@@ -170,9 +224,16 @@ class SpecificTaskView: Fragment() {
         when(item.itemId) {
             R.id.option_delete_task -> {
                 // Instantiate a DAO
-                val taskDAO = TaskDAO(requireContext())
-                taskDAO.document = task
-                UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.deleteTask(it.authUid) }
+                if(!this.task.isSubtask) {
+                    val taskDAO = TaskDAO(requireContext())
+                    taskDAO.document = task
+                    UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.deleteTask(it.authUid) }
+                } else {
+                    val taskDAO = TaskDAO(requireContext())
+                    UserPreferences(requireContext()).getLoggedInUser()?.let {
+                        //taskDAO.deleteSubtask(it.authUid, this.parentTask.taskId, this.task.taskId)
+                    }
+                }
             }
 
             R.id.option_upload -> {

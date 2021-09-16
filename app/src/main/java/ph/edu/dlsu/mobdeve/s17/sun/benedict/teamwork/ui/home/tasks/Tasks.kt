@@ -10,11 +10,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.DocumentReference
+import kotlinx.coroutines.selects.select
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters.TaskAdapter
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.TaskDAO
@@ -48,11 +50,6 @@ class Tasks : Fragment() {
                 fragmentBinding.emptyTasksGraphic.visibility = View.GONE
                 fragmentBinding.taskRecyclerView.visibility = View.VISIBLE
             }
-
-            // Initialize the SetOnClickListener of the Add Task FAB
-            fragmentBinding.addTaskFab.setOnClickListener {
-                findNavController().navigate(R.id.navigateToNewTask)
-            }
         }
     }
 
@@ -64,11 +61,7 @@ class Tasks : Fragment() {
         fragmentBinding = FragmentTasksBinding.inflate(inflater, container, false)
         val view = fragmentBinding.root
 
-        // Populate the Context Menu
-        val filterMenuItems = listOf("All", "Completed", "Incomplete")
-        val filterMenuAdapter = ArrayAdapter(this.requireActivity().applicationContext, R.layout.list_item_task_filter_dropdown, filterMenuItems)
-        fragmentBinding.taskFilterSelectorDropdownAutocomplete.setAdapter(filterMenuAdapter)
-        fragmentBinding.taskFilterSelectorDropdownAutocomplete.setText(filterMenuItems[0], false)
+        initializeFilterMenu()
 
         // Fetch Task Data
         this.taskList = ArrayList()
@@ -80,11 +73,45 @@ class Tasks : Fragment() {
         val taskDAO = TaskDAO(requireContext())
         UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.getAllUserTasks(it.authUid) }
 
+        // Initialize the SetOnClickListener of the Add Task FAB
+        fragmentBinding.addTaskFab.setOnClickListener {
+            findNavController().navigate(R.id.navigateToNewTask)
+        }
+
         return view
     }
 
     override fun onStop() {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
         super.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initializeFilterMenu()
+    }
+
+    private fun initializeFilterMenu() {
+        // Populate the Context Menu
+        val filterMenuItems = listOf("All", "Completed", "Incomplete")
+        val filterMenuAdapter = ArrayAdapter(this.requireActivity().applicationContext, R.layout.list_item_task_filter_dropdown, filterMenuItems)
+        fragmentBinding.taskFilterSelectorDropdownAutocomplete.setAdapter(filterMenuAdapter)
+        fragmentBinding.taskFilterSelectorDropdownAutocomplete.setText(filterMenuItems[0], false)
+        fragmentBinding.taskFilterSelectorDropdownAutocomplete.setOnItemClickListener { adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
+            val selectedString = adapterView.getItemAtPosition(i) as String
+            val pos = filterMenuItems.indexOf(selectedString)
+            val taskDAO = TaskDAO(requireContext())
+            when(pos) {
+                0 -> {
+                    UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.getAllUserTasks(it.authUid) }
+                }
+                1 -> {
+                    UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.getUserTasksFiltered(it.authUid, true) }
+                }
+                2 -> {
+                    UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.getUserTasksFiltered(it.authUid, false) }
+                }
+            }
+        }
     }
 }

@@ -1,31 +1,37 @@
 package ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.projects
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters.TaskAdapter
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.ProjectDAO
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.TaskDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.UserDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentProjectsBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentViewProjectBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentViewTaskBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Project
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -35,6 +41,26 @@ import java.util.*
  * A simple [Fragment] subclass.
  */
 class ViewProjectFragment : Fragment() {
+
+    private val broadcastReceiver = object: BroadcastReceiver() {
+        override fun onReceive(ctx: Context?, intent: Intent?) {
+            when(intent?.action) {
+                TaskDAO.GET_PROJECT_TASKS_SUCCESS_INTENT -> {
+                    fragmentBinding.rvProjectTasks.layoutManager = LinearLayoutManager(requireContext())
+                    val projectTaskAdapter = TaskAdapter((intent.extras!!["taskList"] as Array<Task>).toCollection(ArrayList()), requireContext())
+                    fragmentBinding.rvProjectTasks.adapter = projectTaskAdapter
+
+                    if(projectTaskAdapter.tasks.size > 0) {
+                        fragmentBinding.noProjectTaskGraphic.visibility = View.GONE
+                        fragmentBinding.rvProjectTasks.visibility = View.VISIBLE
+                    }
+                }
+                TaskDAO.GET_PROJECT_TASKS_FAILURE_INTENT -> {
+                    Toast.makeText(requireContext(), "Failed to query project tasks.", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
     val firebaseStorage = FirebaseStorage.getInstance()
 
@@ -52,6 +78,8 @@ class ViewProjectFragment : Fragment() {
         fragmentBinding = FragmentViewProjectBinding.inflate(inflater, container, false)
         val view = fragmentBinding.root
 
+        setHasOptionsMenu(true)
+
         // Get the bundled data
         this.project = arguments?.getParcelable<Project>("project")!!
 
@@ -61,6 +89,18 @@ class ViewProjectFragment : Fragment() {
         fragmentBinding.viewProjectCompletionDate.setText("${this.project.completionDate.toString().subSequence(0, 19)}")
         (activity as AppCompatActivity).supportActionBar?.title = this.project.name
         resetProjectImage()
+
+        // Load tasks
+        val taskDAO = TaskDAO(requireContext())
+        UserPreferences(requireContext()).getLoggedInUser()?.let {
+            taskDAO.getProjectTasks(it.authUid, this.project.projectId)
+        }
+
+        // Register the Broadcast Receiver
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(TaskDAO.GET_PROJECT_TASKS_SUCCESS_INTENT)
+        intentFilter.addAction(TaskDAO.GET_PROJECT_TASKS_FAILURE_INTENT)
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, intentFilter)
 
         // OnClickListeners
         fragmentBinding.btnEditProjectImage.setOnClickListener {
@@ -72,6 +112,9 @@ class ViewProjectFragment : Fragment() {
                 Intent.createChooser(intent, "Select Picture"),
                 0
             )
+        }
+        fragmentBinding.fabNewTask.setOnClickListener {
+
         }
         fragmentBinding.fabEditProject.setOnClickListener {
             if(!editState) {
@@ -193,6 +236,36 @@ class ViewProjectFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.view_project_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.option_delete_project -> {
+                // Instantiate a DAO
+                val projectDAO = ProjectDAO(requireContext())
+                UserPreferences(requireContext()).getLoggedInUser()?.let {
+                    projectDAO.deleteProjectCb(it.authUid, this.project.projectId) {
+                        if(it) {
+                            Toast.makeText(requireContext(), "Deleted Project", Toast.LENGTH_LONG).show()
+                            findNavController().popBackStack()
+                        } else {
+                            Toast.makeText(requireContext(), "Failed to delete project.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStop() {
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
+        super.onStop()
     }
 
 }

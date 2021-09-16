@@ -55,10 +55,13 @@ class AddSubtask: Fragment() {
                     // Update the view
                     fragmentBinding.newTaskDueDateSet.setText("${(1 + monthSet).toString().padStart(2, '0')}/${daySet.toString().padStart(2, '0')}/${yearSet.toString().padStart(4, '0')}")
                 }
-                "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.created_user_task" -> {
+                TaskDAO.CREATE_SUBTASK_SUCCESS_INTENT -> {
                     // Show a Toast
-                    Toast.makeText(requireContext(), "Task Created!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Subtask Created!", Toast.LENGTH_LONG).show()
                     parentFragmentManager.popBackStackImmediate()
+                }
+                TaskDAO.CREATE_SUBTASK_FAILURE_INTENT -> {
+                    Toast.makeText(requireContext(), "Failed to create subtask.", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -84,6 +87,8 @@ class AddSubtask: Fragment() {
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.datepicker_new_date_set")
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.created_user_task")
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.create_user_task_failed")
+        intentFilter.addAction(TaskDAO.CREATE_SUBTASK_FAILURE_INTENT)
+        intentFilter.addAction(TaskDAO.CREATE_SUBTASK_SUCCESS_INTENT)
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, intentFilter)
 
         // Initialize OnClickListeners
@@ -112,14 +117,15 @@ class AddSubtask: Fragment() {
                     false,
                     fragmentBinding.etTaskAbout.text.toString(),
                     Date(yearSet, monthSet, daySet, hourSet, minuteSet),
-                    ArrayList<ParcelableDocumentReference>(),
+                    true,
                     ArrayList<String>()
                 )
 
                 // Call the DAO
+                val parentTask = arguments?.getParcelable<Task>("taskObject")!!
                 val taskDAO = TaskDAO(requireContext())
                 taskDAO.document = newTask
-                UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.createNewTask(it.authUid) }
+                UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.createSubtask(it.authUid, parentTask.taskId) }
             }
         }
 
