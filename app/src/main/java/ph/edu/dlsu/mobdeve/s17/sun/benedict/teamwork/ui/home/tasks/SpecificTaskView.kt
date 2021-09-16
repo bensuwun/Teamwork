@@ -19,6 +19,7 @@ import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.client.util.DateTime
 import com.google.api.services.tasks.Tasks
 import com.google.api.services.tasks.model.TaskList
 import com.squareup.okhttp.*
@@ -242,6 +243,7 @@ class SpecificTaskView: Fragment() {
                                         // Instantiate a new Task for Task API
                                         val newTask = com.google.api.services.tasks.model.Task()
                                         newTask.title = task.name
+                                        newTask.due = DateTime(task.dueDate)
 
                                         // Get all tasks list of user
                                         val result = service.tasklists().list().execute()

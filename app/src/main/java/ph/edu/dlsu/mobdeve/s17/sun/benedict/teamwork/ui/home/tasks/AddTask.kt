@@ -13,9 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters.TaskAdapter
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.TaskDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentNewTaskBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.ParcelableDocumentReference
@@ -104,13 +102,21 @@ class AddTask: Fragment() {
                 Toast.makeText(requireContext(), "One or more fields are blank.", Toast.LENGTH_LONG).show()
             }
             else {
+                val cal = Calendar.getInstance()
+                cal[Calendar.YEAR] = yearSet
+                cal[Calendar.MONTH] = monthSet
+                cal[Calendar.DAY_OF_MONTH] = daySet
+                cal[Calendar.HOUR_OF_DAY] = hourSet
+                cal[Calendar.MINUTE] = minuteSet
+                cal[Calendar.SECOND] = 0
+                cal[Calendar.MILLISECOND] = 0
                 // Create an instance of a task via constructor
                 val newTask = Task(
                     fragmentBinding.etTaskName.text.toString(),
                     fragmentBinding.etTaskDescription.text.toString(),
                     false,
                     fragmentBinding.etTaskAbout.text.toString(),
-                    Date(yearSet, monthSet, daySet, hourSet, minuteSet),
+                    cal.time,
                     ArrayList<ParcelableDocumentReference>(),
                     ArrayList<String>()
                 )
