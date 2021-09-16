@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
@@ -69,6 +71,7 @@ class SpecificTaskView: Fragment() {
         this.task = arguments?.getParcelable<Task>("taskObject")!!
 
         // Apply to views
+        Log.d("SpecificTaskView:onCreateView", task.isCompleted.toString())
         fragmentBinding.taskViewAbout.setText(task.about)
         fragmentBinding.taskViewDesc.setText(task.description)
         fragmentBinding.taskCheckboxIsDone.isChecked = task.isCompleted
@@ -136,6 +139,14 @@ class SpecificTaskView: Fragment() {
 
             // Flip the edit mode
             editMode = !editMode
+        }
+
+        this.fragmentBinding.fabNewSubtask.setOnClickListener { v ->
+            // Pass the current Task object through a bundle
+            val taskBundle = bundleOf(
+                "taskObject" to this.task as Parcelable
+            )
+             findNavController().navigate(R.id.fromTaskViewToNewSubtask, taskBundle)
         }
 
         return view
