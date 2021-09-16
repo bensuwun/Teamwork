@@ -57,7 +57,7 @@ class AddTask: Fragment() {
                 "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.created_user_task" -> {
                     // Show a Toast
                     Toast.makeText(requireContext(), "Task Created!", Toast.LENGTH_LONG).show()
-                    parentFragmentManager.popBackStackImmediate()
+                    findNavController().navigate(R.id.fromAddTaskNavigateBackToTasksFragment)
                 }
             }
         }

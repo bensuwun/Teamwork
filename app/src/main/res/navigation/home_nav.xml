@@ -73,12 +73,23 @@
         android:id="@+id/addTaskView"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.tasks.AddTask"
         android:label="Add New Task"
-        tools:layout="@layout/fragment_new_task"/>
+        tools:layout="@layout/fragment_new_task">
+        <action
+            android:id="@+id/fromAddTaskNavigateBackToTasksFragment"
+            app:destination="@id/tasksFragment"
+            app:popUpTo="@id/tasksFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
     <fragment
         android:id="@+id/myTaskView"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.tasks.SpecificTaskView"
         android:label="Task"
         tools:layout="@layout/fragment_view_task">
+        <action
+            android:id="@+id/fromTaskViewNavigateBackToTasksFragment"
+            app:destination="@id/tasksFragment"
+            app:popUpTo="@id/tasksFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/searchGuilds"

@@ -6,29 +6,38 @@ import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.Scope
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.services.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentSettingsBinding
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication.MainActivity
-import java.io.IOException
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
-import java.util.*
 import com.google.firebase.storage.UploadTask
+import com.squareup.okhttp.*
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.UserDAO
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentSettingsBinding
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.authentication.MainActivity
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 import java.io.ByteArrayOutputStream
-import android.graphics.BitmapFactory
-import android.widget.ImageView
+import java.io.IOException
+import java.util.*
 
 
 /**
@@ -38,6 +47,7 @@ class Settings : Fragment() {
 
     lateinit var binding: FragmentSettingsBinding
     private val firebaseStorage = FirebaseStorage.getInstance()
+    private val TAG = "Settings"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

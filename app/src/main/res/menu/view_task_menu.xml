@@ -4,4 +4,7 @@
         android:id="@+id/option_delete_task"
         android:title="@string/delete_task_label"
         />
+    <item
+        android:id="@+id/option_upload"
+        android:title="Upload to Google Calendar"/>
 </menu>
