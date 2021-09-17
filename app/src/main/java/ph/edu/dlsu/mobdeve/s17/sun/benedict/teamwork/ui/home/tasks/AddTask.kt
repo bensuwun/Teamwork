@@ -17,6 +17,7 @@ import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.TaskDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentNewTaskBinding
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.ParcelableDocumentReference
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Project
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.TimePickerFragment
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.DatePickerFragment
@@ -57,6 +58,13 @@ class AddTask: Fragment() {
                     Toast.makeText(requireContext(), "Task Created!", Toast.LENGTH_LONG).show()
                     findNavController().navigate(R.id.fromAddTaskNavigateBackToTasksFragment)
                 }
+                TaskDAO.CREATE_PROJECT_TASK_SUCCESS_INTENT -> {
+                    Toast.makeText(requireContext(), "Task Created!", Toast.LENGTH_LONG).show()
+                    findNavController().popBackStack()
+                }
+                TaskDAO.CREATE_PROJECT_TASK_FAILURE_INTENT -> {
+                    Toast.makeText(requireContext(), "Unable to create task.", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -81,6 +89,8 @@ class AddTask: Fragment() {
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.datepicker_new_date_set")
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.created_user_task")
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.create_user_task_failed")
+        intentFilter.addAction(TaskDAO.CREATE_PROJECT_TASK_SUCCESS_INTENT)
+        intentFilter.addAction(TaskDAO.CREATE_PROJECT_TASK_FAILURE_INTENT)
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, intentFilter)
 
         // Initialize OnClickListeners
@@ -122,9 +132,20 @@ class AddTask: Fragment() {
                 )
 
                 // Call the DAO
-                val taskDAO = TaskDAO(requireContext())
-                taskDAO.document = newTask
-                UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.createNewTask(it.authUid) }
+                // Check if this task is for a project or not
+                val parentProject = arguments?.getParcelable<Project>("project")
+
+                if(parentProject == null) {
+                    val taskDAO = TaskDAO(requireContext())
+                    taskDAO.document = newTask
+                    UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.createNewTask(it.authUid) }
+                } else {
+                    val taskDAO = TaskDAO(requireContext())
+                    taskDAO.document = newTask
+                    UserPreferences(requireContext()).getLoggedInUser()?.let {
+                        taskDAO.createProjectTask(it.authUid, parentProject.projectId)
+                    }
+                }
             }
         }
 

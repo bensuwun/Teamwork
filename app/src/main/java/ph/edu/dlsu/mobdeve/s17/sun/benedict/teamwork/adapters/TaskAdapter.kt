@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Project
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
 import java.util.*
 import kotlin.collections.ArrayList
@@ -20,6 +21,7 @@ import kotlin.collections.ArrayList
 class TaskAdapter(val tasks: ArrayList<Task>, val context: Context): RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     var parentTask: Task? = null
+    var parentProject: Project? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         // Inflate the ViewHolder
@@ -41,7 +43,7 @@ class TaskAdapter(val tasks: ArrayList<Task>, val context: Context): RecyclerVie
         holder.tvTaskTime.setText(task.dueDate.toString().subSequence(11, 19))
 
         // Check if the task is overdue
-        if(task.dueDate.before(Date())) {
+        if(task.dueDate.before(Date()) && !task.completed) {
             // Set colors to red
             holder.tvTaskDate.setTextColor(context.resources.getColor(R.color.warning_red))
             holder.tvTaskTime.setTextColor(context.resources.getColor(R.color.warning_red))
@@ -52,7 +54,8 @@ class TaskAdapter(val tasks: ArrayList<Task>, val context: Context): RecyclerVie
             // Bundle up data to send
             val bundle = bundleOf(
                 "taskObject" to task,
-                "parentTask" to parentTask
+                "parentTask" to parentTask,
+                "parentProject" to parentProject
             )
             holder.ltTaskCard.findNavController().navigate(R.id.navigateToTaskView, bundle)
         }

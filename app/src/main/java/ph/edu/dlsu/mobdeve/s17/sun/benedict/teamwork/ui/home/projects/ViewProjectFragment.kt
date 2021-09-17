@@ -48,6 +48,7 @@ class ViewProjectFragment : Fragment() {
                 TaskDAO.GET_PROJECT_TASKS_SUCCESS_INTENT -> {
                     fragmentBinding.rvProjectTasks.layoutManager = LinearLayoutManager(requireContext())
                     val projectTaskAdapter = TaskAdapter((intent.extras!!["taskList"] as Array<Task>).toCollection(ArrayList()), requireContext())
+                    projectTaskAdapter.parentProject = project
                     fragmentBinding.rvProjectTasks.adapter = projectTaskAdapter
 
                     if(projectTaskAdapter.tasks.size > 0) {
@@ -151,7 +152,7 @@ class ViewProjectFragment : Fragment() {
                     projectDAO.updateProjectCb(it.authUid) {
                         if(it) {
                             Toast.makeText(requireContext(), "Updated project information.", Toast.LENGTH_LONG).show()
-
+                            (activity as AppCompatActivity).supportActionBar?.title = this.project.name
                             fragmentBinding.viewProjectAbout.setText(this.project.about)
                             fragmentBinding.viewProjectDesc.setText(this.project.description)
                             fragmentBinding.viewProjectCompletionDate.setText(this.project.completionDate.toString())
@@ -162,6 +163,11 @@ class ViewProjectFragment : Fragment() {
                 }
             }
             editState = !editState
+        }
+        fragmentBinding.fabNewTask.setOnClickListener {
+            // Call the add task fragment -- passing an argument that we are a project
+            val projectBundle = bundleOf("project" to this.project)
+            findNavController().navigate(R.id.fromProjectCreateNewTask, projectBundle)
         }
 
         return view

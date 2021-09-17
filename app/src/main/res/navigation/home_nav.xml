@@ -92,7 +92,11 @@
         android:id="@+id/addSubtaskView"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.tasks.AddSubtask"
         android:label="Add New Subtask"
-        tools:layout="@layout/fragment_new_subtask"/>
+        tools:layout="@layout/fragment_new_subtask">
+        <action
+            android:id="@+id/navigateToTaskView"
+            app:destination="@id/myTaskView"/>
+    </fragment>
     <fragment
         android:id="@+id/myTaskView"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.tasks.SpecificTaskView"
@@ -181,7 +185,14 @@
         android:id="@+id/viewProjectFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.projects.ViewProjectFragment"
         android:label="Project Details"
-        tools:layout="@layout/fragment_view_project" />
+        tools:layout="@layout/fragment_view_project" >
+        <action
+            android:id="@+id/fromProjectCreateNewTask"
+            app:destination="@id/addTaskView"/>
+        <action
+            android:id="@+id/navigateToTaskView"
+            app:destination="@id/myTaskView"/>
+    </fragment>
     <fragment
         android:id="@+id/guildProfileFragment"
         android:name="ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.profile.GuildProfileFragment"

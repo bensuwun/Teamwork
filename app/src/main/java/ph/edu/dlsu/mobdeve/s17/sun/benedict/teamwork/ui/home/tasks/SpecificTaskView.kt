@@ -31,6 +31,7 @@ import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.adapters.TaskAdapter
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.TaskDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentViewTaskBinding
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Project
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Task
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 import java.io.IOException
@@ -92,11 +93,30 @@ class SpecificTaskView: Fragment() {
                 TaskDAO.UPDATE_SUBTASK_FAILURE_INTENT -> {
                     Toast.makeText(requireContext(), "Subtask update failed.", Toast.LENGTH_LONG).show()
                 }
+                TaskDAO.DELETE_PROJECT_TASK_SUCCESS_INTENT -> {
+                    Toast.makeText(requireContext(), "Deleted project task.", Toast.LENGTH_LONG).show()
+                    findNavController().popBackStack()
+                }
+                TaskDAO.DELETE_PROJECT_TASK_FAILURE_INTENT -> {
+                    Toast.makeText(requireContext(), "Failed to delete project task.", Toast.LENGTH_LONG).show()
+                }
+                TaskDAO.UPDATE_PROJECT_TASK_SUCCESS_INTENT -> {
+                    Toast.makeText(requireContext(), "Updated project task.", Toast.LENGTH_LONG).show()
+                }
+                TaskDAO.UPDATE_PROJECT_TASK_FAILURE_INTENT -> {
+                    Toast.makeText(requireContext(), "Failed to update project task.", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
 
     lateinit var subtaskAdapter: TaskAdapter
+
+    var yearSet: Int = 0
+    var monthSet: Int = 0
+    var daySet: Int = 0
+    var hourSet: Int = 0
+    var minuteSet: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -136,7 +156,7 @@ class SpecificTaskView: Fragment() {
         }
 
         // Check if the task is overdue
-        if(task.dueDate.before(Date())) {
+        if(task.dueDate.before(Date()) && !task.completed) {
             // Set colors to red
             fragmentBinding.viewTaskDueDateTime.setTextColor(requireContext().resources.getColor(R.color.warning_red))
         }
@@ -147,6 +167,8 @@ class SpecificTaskView: Fragment() {
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_user_task_failed")
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task")
         intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_user_task_failed")
+        intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.timepicker_new_time_set")
+        intentFilter.addAction("ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.datepicker_new_date_set")
         intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_SUCCESS_INTENT)
         intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_FAILURE_INTENT)
         intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_SUCCESS_INTENT)
@@ -155,6 +177,10 @@ class SpecificTaskView: Fragment() {
         intentFilter.addAction(TaskDAO.DELETE_SUBTASK_FAILURE_INTENT)
         intentFilter.addAction(TaskDAO.UPDATE_SUBTASK_SUCCESS_INTENT)
         intentFilter.addAction(TaskDAO.UPDATE_SUBTASK_FAILURE_INTENT)
+        intentFilter.addAction(TaskDAO.DELETE_PROJECT_TASK_SUCCESS_INTENT)
+        intentFilter.addAction(TaskDAO.DELETE_PROJECT_TASK_FAILURE_INTENT)
+        intentFilter.addAction(TaskDAO.UPDATE_PROJECT_TASK_SUCCESS_INTENT)
+        intentFilter.addAction(TaskDAO.UPDATE_PROJECT_TASK_FAILURE_INTENT)
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, intentFilter)
 
         // Initialize OnClickListener for the FAB
@@ -171,6 +197,19 @@ class SpecificTaskView: Fragment() {
                 fragmentBinding.etTaskViewDue.visibility = View.GONE
                 fragmentBinding.fabEditTask.setImageResource(R.drawable.ic_baseline_edit_24)
 
+                if(yearSet != 0) {
+                    val cal = Calendar.getInstance()
+                    cal[Calendar.YEAR] = yearSet
+                    cal[Calendar.MONTH] = monthSet
+                    cal[Calendar.DAY_OF_MONTH] = daySet
+                    cal[Calendar.HOUR_OF_DAY] = hourSet
+                    cal[Calendar.MINUTE] = minuteSet
+                    cal[Calendar.SECOND] = 0
+                    cal[Calendar.MILLISECOND] = 0
+                    // Create an instance of a task via constructor
+                    task.dueDate = cal.time
+                }
+
                 // Commit to the task object then call the DAO
                 task.name = fragmentBinding.etTaskViewName.text.toString()
                 task.about = fragmentBinding.etTaskViewAbout.text.toString()
@@ -181,15 +220,22 @@ class SpecificTaskView: Fragment() {
                 fragmentBinding.etTaskViewDue.setText(task.dueDate.toString().subSequence(0, 19))
 
                 // Check what editing mode - subtask or task
-                if(!task.isSubtask) {
+                val parentProject = arguments?.getParcelable<Project>("parentProject")
+                if(!task.isSubtask && parentProject == null) {
                     val taskDAO = TaskDAO(requireContext())
                     taskDAO.document = task
                     UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateTask(it.authUid) }
-                } else {
+                } else if(task.isSubtask && parentProject == null) {
                     val taskDAO = TaskDAO(requireContext())
                     val parentTask = arguments?.getParcelable<Task>("parentTask")!!
                     taskDAO.document = task
                     UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateSubtask(it.authUid, parentTask.taskId) }
+                } else if(parentProject != null) {
+                    val taskDAO = TaskDAO(requireContext())
+                    taskDAO.document = task
+                    UserPreferences(requireContext()).getLoggedInUser()?.let {
+                        taskDAO.updateProjectTask(it.authUid, parentProject.projectId)
+                    }
                 }
 
             } else {
@@ -208,6 +254,7 @@ class SpecificTaskView: Fragment() {
                 fragmentBinding.etTaskViewName.visibility = View.VISIBLE
                 fragmentBinding.etTaskViewDue.visibility = View.VISIBLE
                 fragmentBinding.fabEditTask.setImageResource(R.drawable.ic_baseline_done_24)
+
             }
 
             // Flip the edit mode
@@ -222,17 +269,25 @@ class SpecificTaskView: Fragment() {
              findNavController().navigate(R.id.fromTaskViewToNewSubtask, taskBundle)
         }
         fragmentBinding.taskCheckboxIsDone.setOnClickListener { v ->
-            if(!task.isSubtask) {
+            val parentProject = arguments?.getParcelable<Project>("parentProject")
+            if(!task.isSubtask && parentProject == null) {
                 val taskDAO = TaskDAO(requireContext())
                 task.completed = fragmentBinding.taskCheckboxIsDone.isChecked
                 taskDAO.document = task
                 UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateTask(it.authUid) }
-            } else {
+            } else if(task.isSubtask && parentProject == null) {
                 val taskDAO = TaskDAO(requireContext())
                 val parentTask = arguments?.getParcelable<Task>("parentTask")!!
                 task.completed = fragmentBinding.taskCheckboxIsDone.isChecked
                 taskDAO.document = task
                 UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateSubtask(it.authUid, parentTask.taskId) }
+            } else if(parentProject != null) {
+                val taskDAO = TaskDAO(requireContext())
+                task.completed = fragmentBinding.taskCheckboxIsDone.isChecked
+                taskDAO.document = task
+                UserPreferences(requireContext()).getLoggedInUser()?.let {
+                    taskDAO.updateProjectTask(it.authUid, parentProject.projectId)
+                }
             }
         }
 
@@ -247,16 +302,23 @@ class SpecificTaskView: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.option_delete_task -> {
+                val parentProject = arguments?.getParcelable<Project>("parentProject")
+
                 // Instantiate a DAO
-                if(!this.task.isSubtask) {
+                if(!this.task.isSubtask && parentProject == null) {
                     val taskDAO = TaskDAO(requireContext())
                     taskDAO.document = task
                     UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.deleteTask(it.authUid) }
-                } else {
+                } else if(this.task.isSubtask && parentProject == null) {
                     val taskDAO = TaskDAO(requireContext())
                     UserPreferences(requireContext()).getLoggedInUser()?.let {
                         val parentTask = arguments?.getParcelable<Task>("parentTask")!!
                         taskDAO.deleteSubtask(it.authUid, parentTask.taskId, task.taskId)
+                    }
+                } else if(parentProject != null) {
+                    val taskDAO = TaskDAO(requireContext())
+                    UserPreferences(requireContext()).getLoggedInUser()?.let {
+                        taskDAO.deleteProjectTask(it.authUid, parentProject.projectId, task.taskId)
                     }
                 }
             }

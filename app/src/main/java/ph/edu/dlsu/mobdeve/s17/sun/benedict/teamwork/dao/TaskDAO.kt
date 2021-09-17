@@ -111,6 +111,25 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
             }
     }
 
+    fun createProjectTask(userId: String, projectId: String) {
+        this.fireStoreDB
+            .collection(this.fireStoreCollection)
+            .document(userId)
+            .collection("projects")
+            .document(projectId)
+            .collection(this.taskCollection)
+            .document()
+            .set(this.document as Task)
+            .addOnSuccessListener {
+                val intent = Intent(CREATE_PROJECT_TASK_SUCCESS_INTENT)
+                broadcastManager.sendBroadcast(intent)
+            }
+            .addOnFailureListener {
+                val intent = Intent(CREATE_PROJECT_TASK_FAILURE_INTENT)
+                broadcastManager.sendBroadcast(intent)
+            }
+    }
+
     fun createNewTask(userId: String) {
         this.fireStoreDB
             .collection(this.fireStoreCollection)
@@ -186,6 +205,44 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
             }
     }
 
+    fun deleteProjectTask(userId: String, parentProject: String, projectTaskId: String) {
+        this.fireStoreDB
+            .collection(this.fireStoreCollection)
+            .document(userId)
+            .collection("projects")
+            .document(parentProject)
+            .collection(this.taskCollection)
+            .document(projectTaskId)
+            .delete()
+            .addOnSuccessListener {
+                val intent = Intent(DELETE_PROJECT_TASK_SUCCESS_INTENT)
+                broadcastManager.sendBroadcast(intent)
+            }
+            .addOnFailureListener {
+                val intent = Intent(DELETE_PROJECT_TASK_FAILURE_INTENT)
+                broadcastManager.sendBroadcast(intent)
+            }
+    }
+
+    fun updateProjectTask(userId: String, parentProject: String) {
+        this.fireStoreDB
+            .collection(this.fireStoreCollection)
+            .document(userId)
+            .collection("projects")
+            .document(parentProject)
+            .collection(taskCollection)
+            .document((this.document as Task).taskId)
+            .set(this.document as Task)
+            .addOnSuccessListener {
+                val intent = Intent(UPDATE_PROJECT_TASK_SUCCESS_INTENT)
+                broadcastManager.sendBroadcast(intent)
+            }
+            .addOnFailureListener {
+                val intent = Intent(UPDATE_PROJECT_TASK_FAILURE_INTENT)
+                broadcastManager.sendBroadcast(intent)
+            }
+    }
+
     fun updateSubtask(userId: String, parentTask: String) {
         this.fireStoreDB
             .collection(this.fireStoreCollection)
@@ -252,5 +309,11 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
         val GET_PROJECT_TASKS_FAILURE_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.get_project_tasks_failure"
         val UPDATE_SUBTASK_SUCCESS_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_subtask_success"
         val UPDATE_SUBTASK_FAILURE_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_subtask_failure"
+        val CREATE_PROJECT_TASK_SUCCESS_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.create_project_task_success"
+        val CREATE_PROJECT_TASK_FAILURE_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.create_project_task_failure"
+        val DELETE_PROJECT_TASK_SUCCESS_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_project_task_success"
+        val DELETE_PROJECT_TASK_FAILURE_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_project_task_failure"
+        val UPDATE_PROJECT_TASK_FAILURE_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_project_task_failure"
+        val UPDATE_PROJECT_TASK_SUCCESS_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_project_task_success"
     }
 }
