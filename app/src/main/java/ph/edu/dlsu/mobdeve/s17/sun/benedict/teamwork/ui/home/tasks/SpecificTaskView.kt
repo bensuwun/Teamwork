@@ -67,6 +67,7 @@ class SpecificTaskView: Fragment() {
                     // Activate the subtask recycler view
                     fragmentBinding.subtaskRecyclerView.layoutManager = LinearLayoutManager(requireContext())
                     subtaskAdapter = TaskAdapter((intent.extras!!["subtaskList"] as Array<Task>).toCollection(ArrayList()), requireContext())
+                    subtaskAdapter.parentTask = task
                     fragmentBinding.subtaskRecyclerView.adapter = subtaskAdapter
 
                     // Show the recycler view
@@ -85,12 +86,17 @@ class SpecificTaskView: Fragment() {
                 TaskDAO.DELETE_SUBTASK_FAILURE_INTENT -> {
                     Toast.makeText(requireContext(), "Failed to delete subtask.", Toast.LENGTH_LONG).show()
                 }
+                TaskDAO.UPDATE_SUBTASK_SUCCESS_INTENT -> {
+                    Toast.makeText(requireContext(), "Subtask updated.", Toast.LENGTH_SHORT).show()
+                }
+                TaskDAO.UPDATE_SUBTASK_FAILURE_INTENT -> {
+                    Toast.makeText(requireContext(), "Subtask update failed.", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
 
     lateinit var subtaskAdapter: TaskAdapter
-    lateinit var parentTask: Task
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -145,6 +151,10 @@ class SpecificTaskView: Fragment() {
         intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_FAILURE_INTENT)
         intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_SUCCESS_INTENT)
         intentFilter.addAction(TaskDAO.GET_TASK_SUBTASKS_FAILURE_INTENT)
+        intentFilter.addAction(TaskDAO.DELETE_SUBTASK_SUCCESS_INTENT)
+        intentFilter.addAction(TaskDAO.DELETE_SUBTASK_FAILURE_INTENT)
+        intentFilter.addAction(TaskDAO.UPDATE_SUBTASK_SUCCESS_INTENT)
+        intentFilter.addAction(TaskDAO.UPDATE_SUBTASK_FAILURE_INTENT)
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, intentFilter)
 
         // Initialize OnClickListener for the FAB
@@ -170,9 +180,17 @@ class SpecificTaskView: Fragment() {
                 fragmentBinding.taskViewDesc.setText(task.description)
                 fragmentBinding.etTaskViewDue.setText(task.dueDate.toString().subSequence(0, 19))
 
-                val taskDAO = TaskDAO(requireContext())
-                taskDAO.document = task
-                UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateTask(it.authUid) }
+                // Check what editing mode - subtask or task
+                if(!task.isSubtask) {
+                    val taskDAO = TaskDAO(requireContext())
+                    taskDAO.document = task
+                    UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateTask(it.authUid) }
+                } else {
+                    val taskDAO = TaskDAO(requireContext())
+                    val parentTask = arguments?.getParcelable<Task>("parentTask")!!
+                    taskDAO.document = task
+                    UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateSubtask(it.authUid, parentTask.taskId) }
+                }
 
             } else {
                 // Migrate Values
@@ -204,11 +222,17 @@ class SpecificTaskView: Fragment() {
              findNavController().navigate(R.id.fromTaskViewToNewSubtask, taskBundle)
         }
         fragmentBinding.taskCheckboxIsDone.setOnClickListener { v ->
-            val taskDAO = TaskDAO(requireContext())
-            this.task.completed = fragmentBinding.taskCheckboxIsDone.isChecked
-            taskDAO.document = this.task
-            UserPreferences(requireContext()).getLoggedInUser()?.let {
-                taskDAO.updateTask(it.authUid)
+            if(!task.isSubtask) {
+                val taskDAO = TaskDAO(requireContext())
+                task.completed = fragmentBinding.taskCheckboxIsDone.isChecked
+                taskDAO.document = task
+                UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateTask(it.authUid) }
+            } else {
+                val taskDAO = TaskDAO(requireContext())
+                val parentTask = arguments?.getParcelable<Task>("parentTask")!!
+                task.completed = fragmentBinding.taskCheckboxIsDone.isChecked
+                taskDAO.document = task
+                UserPreferences(requireContext()).getLoggedInUser()?.let { taskDAO.updateSubtask(it.authUid, parentTask.taskId) }
             }
         }
 
@@ -231,7 +255,8 @@ class SpecificTaskView: Fragment() {
                 } else {
                     val taskDAO = TaskDAO(requireContext())
                     UserPreferences(requireContext()).getLoggedInUser()?.let {
-                        //taskDAO.deleteSubtask(it.authUid, this.parentTask.taskId, this.task.taskId)
+                        val parentTask = arguments?.getParcelable<Task>("parentTask")!!
+                        taskDAO.deleteSubtask(it.authUid, parentTask.taskId, task.taskId)
                     }
                 }
             }

@@ -167,11 +167,42 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
             }
     }
 
-    fun deleteSubtask(subtaskId: String) {
+    fun deleteSubtask(userId: String, parentTask: String, subtaskId: String) {
         this.fireStoreDB
-            .collectionGroup("subtasks")
-            .whereEqualTo(FieldPath.documentId(), subtaskId)
+            .collection(this.fireStoreCollection)
+            .document(userId)
+            .collection(this.taskCollection)
+            .document(parentTask)
+            .collection("subtasks")
+            .document(subtaskId)
+            .delete()
+            .addOnSuccessListener {
+                val deleteSubtaskIntent = Intent(DELETE_SUBTASK_SUCCESS_INTENT)
+                broadcastManager.sendBroadcast(deleteSubtaskIntent)
+            }
+            .addOnFailureListener {
+                val deleteSubtaskIntent = Intent(DELETE_SUBTASK_FAILURE_INTENT)
+                broadcastManager.sendBroadcast(deleteSubtaskIntent)
+            }
+    }
 
+    fun updateSubtask(userId: String, parentTask: String) {
+        this.fireStoreDB
+            .collection(this.fireStoreCollection)
+            .document(userId)
+            .collection(this.taskCollection)
+            .document(parentTask)
+            .collection("subtasks")
+            .document((this.document as Task).taskId)
+            .set(this.document as Task)
+            .addOnSuccessListener {
+                val updateIntent = Intent(UPDATE_SUBTASK_SUCCESS_INTENT)
+                broadcastManager.sendBroadcast(updateIntent)
+            }
+            .addOnFailureListener {
+                val updateIntent = Intent(UPDATE_SUBTASK_FAILURE_INTENT)
+                broadcastManager.sendBroadcast(updateIntent)
+            }
     }
 
     fun deleteTask(userId: String) {
@@ -219,5 +250,7 @@ class TaskDAO(ctx: Context): TeamworkFirestoreDAO() {
         val DELETE_SUBTASK_FAILURE_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.delete_subtask_failure"
         val GET_PROJECT_TASKS_SUCCESS_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.get_project_tasks_success"
         val GET_PROJECT_TASKS_FAILURE_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.get_project_tasks_failure"
+        val UPDATE_SUBTASK_SUCCESS_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_subtask_success"
+        val UPDATE_SUBTASK_FAILURE_INTENT = "ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.update_subtask_failure"
     }
 }

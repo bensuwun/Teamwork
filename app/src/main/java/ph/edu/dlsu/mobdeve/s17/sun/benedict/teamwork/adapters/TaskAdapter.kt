@@ -19,6 +19,8 @@ import kotlin.collections.ArrayList
 
 class TaskAdapter(val tasks: ArrayList<Task>, val context: Context): RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
+    var parentTask: Task? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         // Inflate the ViewHolder
         return TaskViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_task, parent, false))
@@ -49,7 +51,8 @@ class TaskAdapter(val tasks: ArrayList<Task>, val context: Context): RecyclerVie
         holder.ltTaskCard.setOnClickListener {
             // Bundle up data to send
             val bundle = bundleOf(
-                "taskObject" to task
+                "taskObject" to task,
+                "parentTask" to parentTask
             )
             holder.ltTaskCard.findNavController().navigate(R.id.navigateToTaskView, bundle)
         }
