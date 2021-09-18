@@ -22,6 +22,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.client.util.DateTime
+import com.google.api.services.calendar.CalendarScopes
 import com.google.api.services.calendar.model.Event
 import com.google.api.services.calendar.model.EventDateTime
 import com.google.api.services.tasks.Tasks
@@ -341,12 +342,12 @@ class SpecificTaskView: Fragment() {
 
                 // If logged in user is not a google account
                 if (serverAuthCode.equals("")) {
-                    Toast.makeText(context, "Failed to upload to Google Calendar: Server auth code = null", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Failed to upload to Google Calendar. Please try signing in again with your Google Account.", Toast.LENGTH_SHORT).show()
                     return false
                 }
 
                 // Check if user has the necessary scopes
-                val scope = Scope("https://www.googleapis.com/auth/tasks")
+                val scope = Scope(CalendarScopes.CALENDAR)
                 if (!GoogleSignIn.hasPermissions(loggedInAccount, scope)) {
                     Log.d(TAG, "No permissions yet")
                     GoogleSignIn.requestPermissions(activity, 120, loggedInAccount, scope)
