@@ -37,6 +37,7 @@ import java.util.*
 class Settings : Fragment() {
 
     lateinit var binding: FragmentSettingsBinding
+    lateinit var userPreferences: UserPreferences
     private val firebaseStorage = FirebaseStorage.getInstance()
     private val TAG = "Settings"
 
@@ -53,6 +54,12 @@ class Settings : Fragment() {
             // Sign out from Google
             GoogleSignIn.getClient((this.activity as HomeActivity).applicationContext,GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN).build()).signOut()
+            // Reset related values from user preferences (used for Calendar API in SpecificTaskView)
+            this.userPreferences = UserPreferences(requireContext())
+            userPreferences.saveStringPreferences("serverAuthCode", "")
+            userPreferences.saveStringPreferences("idToken", "")
+            userPreferences.saveStringPreferences("accessToken", "")
+
             val mainActivityIntent = Intent(this.activity?.applicationContext, MainActivity::class.java)
             startActivity(mainActivityIntent)
             requireActivity().finish()

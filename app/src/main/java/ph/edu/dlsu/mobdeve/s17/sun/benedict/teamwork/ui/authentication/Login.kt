@@ -115,6 +115,11 @@ class Login : Fragment() {
                                 if(userDAO.document != null) {
                                     // User account exists - store to UserPreferences
                                     userPreferences.saveLoggedInUser(userDAO.document as User)
+                                    // Store serverAuthCode and idToken to persist when application is reopened
+                                    val googleAccount =  GoogleSignIn.getLastSignedInAccount(requireContext())
+                                    userPreferences.saveStringPreferences("serverAuthCode", googleAccount.serverAuthCode)
+                                    userPreferences.saveStringPreferences("idToken", googleAccount.idToken)
+
                                     view.findNavController().navigate(R.id.navigateToHome)
                                     activity?.finish()
                                 } else {

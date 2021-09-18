@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
@@ -59,7 +60,7 @@ class UserPreferences(val context: Context) {
      * Method to obtain user preference.
      */
     fun getStringPreferences(key : String): String? {
-        return (userPreferences.getString(key, "Nothing saved"))
+        return (userPreferences.getString(key, ""))
     }
 
     /**

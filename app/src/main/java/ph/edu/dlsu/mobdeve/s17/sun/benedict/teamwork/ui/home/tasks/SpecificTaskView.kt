@@ -16,11 +16,14 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.client.util.DateTime
+import com.google.api.services.calendar.model.Event
+import com.google.api.services.calendar.model.EventDateTime
 import com.google.api.services.tasks.Tasks
 import com.google.api.services.tasks.TasksScopes
 import com.google.api.services.tasks.model.TaskList
@@ -44,6 +47,7 @@ class SpecificTaskView: Fragment() {
     private val TAG = "SpecificTaskView"
 
     lateinit var task: Task
+    lateinit var userPreferences : UserPreferences
 
     var editMode: Boolean = false
 
@@ -132,6 +136,9 @@ class SpecificTaskView: Fragment() {
 
         // Get the bundled data
         this.task = arguments?.getParcelable<Task>("taskObject")!!
+
+        // Set userPreferences
+        this.userPreferences = UserPreferences(requireContext())
 
         // Apply to views
         Log.d("SpecificTaskView:onCreateView", task.completed.toString())
@@ -325,16 +332,18 @@ class SpecificTaskView: Fragment() {
             }
 
             R.id.option_upload -> {
-                // Obtain the Google Sign In Account
-                var loggedInAccount = GoogleSignIn.getLastSignedInAccount(activity)
-                val serverAuthCode = loggedInAccount.serverAuthCode
+                // Obtain the serverAuthCode of the google account, returns null if user is not a GoogleSignInAccount
+                val loggedInAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
+                val serverAuthCode = userPreferences.getStringPreferences("serverAuthCode")
+                val idToken = userPreferences.getStringPreferences("idToken")
 
-                if (serverAuthCode == null) {
+                Log.d(TAG, "Server Auth Code: $serverAuthCode")
+
+                // If logged in user is not a google account
+                if (serverAuthCode.equals("")) {
                     Toast.makeText(context, "Failed to upload to Google Calendar: Server auth code = null", Toast.LENGTH_SHORT).show()
                     return false
                 }
-
-                Log.d(TAG, "Server Auth Code: $serverAuthCode")
 
                 // Check if user has the necessary scopes
                 val scope = Scope("https://www.googleapis.com/auth/tasks")
@@ -342,128 +351,128 @@ class SpecificTaskView: Fragment() {
                     Log.d(TAG, "No permissions yet")
                     GoogleSignIn.requestPermissions(activity, 120, loggedInAccount, scope)
                 } else {
-                    // Build the tasks service
-                    Log.d(TAG, "${loggedInAccount.displayName}|${loggedInAccount.email}|${loggedInAccount.serverAuthCode}")
+                    // Check if access token already exists in userPreferences
+                    val accessToken = userPreferences.getStringPreferences("accessToken")
+                    Log.d(TAG, "Access Token: ${accessToken.toString()}")
+                    if (!(accessToken.equals(""))) {
+                        // Build the calendar service
+                        val credential = GoogleCredential().setAccessToken(accessToken)
+                        val service = com.google.api.services.calendar.Calendar.Builder(NetHttpTransport(), JacksonFactory(), credential)
+                            .setApplicationName("Teamwork")
+                            .build()
+                        /*
+                        val service = Tasks.Builder(NetHttpTransport(), JacksonFactory(), credential)
+                            .setApplicationName("Teamwork")
+                            .build()
 
-                    // Request additional scope
-                    loggedInAccount = GoogleSignIn.getAccountForScopes(requireContext(), Scope(TasksScopes.TASKS))
+                         */
 
-
-                    // Get access token from serverauthcode
-                    val client = OkHttpClient()
-                    val requestBody: RequestBody = FormEncodingBuilder()
-                        .add("grant_type", "authorization_code")
-                        .add(
-                            "client_id",
-                            getString(R.string.default_web_client_id)
-                        )
-                        .add(
-                            "client_secret",
-                            "0we2thAgoBHrYqbozOjT-3AI"
-                        )
-                        .add("redirect_uri", "")
-                        .add("code", loggedInAccount.serverAuthCode)
-                        .add("id_token", loggedInAccount.idToken)
-                        .build()
-                    val request: Request = Request.Builder()
-                        .url("https://www.googleapis.com/oauth2/v4/token")
-                        .post(requestBody)
-                        .build()
-                    client.newCall(request).enqueue(object : Callback {
-                        override fun onFailure(request: Request?, e: IOException) {
-                            Log.e(TAG, e.toString())
-                            Toast.makeText(context, "Failed to upload to Google Calendar", Toast.LENGTH_SHORT).show()
-                        }
-
-                        @Throws(IOException::class)
-                        override fun onResponse(response: Response) {
+                        // Network requests cannot run on main UI thread, so we create a Worker thread.
+                        Thread {
                             try {
-                                val jsonObject = JSONObject(response.body().string())
-                                val message: String = jsonObject.toString(5)
-                                Log.i(TAG, message)
-                                val accessToken = jsonObject.getString("access_token")
-                                Log.d(TAG, accessToken)
-                                val credential = GoogleCredential().setAccessToken(accessToken)
+                                // Instantiate a new Task for Task API
+                                val newEvent = Event()
+                                newEvent.summary = task.name
+                                newEvent.start = EventDateTime().setDateTime(DateTime(task.dueDate))
+                                newEvent.end = EventDateTime().setDateTime(DateTime(task.dueDate))
 
+                                service.Events().insert("primary", newEvent).execute()
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(context, "Successfully uploaded to Google Calendar", Toast.LENGTH_SHORT).show()
+                                }
 
-                                val service = Tasks.Builder(NetHttpTransport(), JacksonFactory(), credential)
-                                    .setApplicationName("Teamwork")
-                                    .build()
-
-                                // Network requests cannot run on main UI thread, so we create a Worker thread.
-                                Thread {
-                                    try {
-                                        // Instantiate a new Task for Task API
-                                        val newTask = com.google.api.services.tasks.model.Task()
-                                        newTask.title = task.name
-                                        newTask.due = DateTime(task.dueDate)
-
-                                        // Get all tasks list of user
-                                        val result = service.tasklists().list().execute()
-                                        var jsonObject = JSONObject(result.toString())
-                                        var targetTaskList : TaskList? = null
-                                        Log.d(TAG, jsonObject.toString())
-                                        val jsonArray = JSONArray(jsonObject.getString("items"))
-
-                                        // Check if the user has a task list with a title of Teamwork
-                                        for (i in 0 until jsonArray.length()) {
-                                            val list : JSONObject = jsonArray.getJSONObject(i)
-                                            Log.d(TAG, list.toString())
-
-                                            // Retrieve the task list's id
-                                            if (list.getString("title").equals("Teamwork")) {
-                                                targetTaskList = TaskList()
-                                                targetTaskList.id = list.getString("id")
-                                                break
-                                            }
-                                        }
-
-                                        // Create a new list and upload the list in the newly created task list
-                                        if (targetTaskList == null) {
-                                            targetTaskList = TaskList()
-                                            targetTaskList.title = "Teamwork"
-                                            Log.d(TAG, "Adding new task list")
-
-                                            // Retrieve the new task list id
-                                            val newListResult = service.tasklists().insert(targetTaskList).execute()
-                                            jsonObject = JSONObject(newListResult.toString())
-                                            val taskListId = jsonObject.getString("id")
-                                            Log.d(TAG, "New task list id: $taskListId")
-
-                                            // Add this task to task list
-                                            Log.d(TAG, "Adding new task")
-                                            service.tasks().insert(taskListId, newTask).execute()
-                                            activity!!.runOnUiThread {
-                                                Toast.makeText(context, "Successfully uploaded to Google Calendar", Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-
-                                        // Add task to existing list
-                                        else {
-                                            Log.d(TAG, "Adding new task")
-                                            service.tasks().insert(targetTaskList.id, newTask).execute()
-                                            activity!!.runOnUiThread {
-                                                Toast.makeText(context, "Successfully uploaded to Google Calendar", Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                        activity!!.runOnUiThread {
-                                            Toast.makeText(context, "Failed to upload to Google Calendar", Toast.LENGTH_SHORT).show()
-                                        }
-
-                                    }
-                                }.start()
-
-                            } catch (e: JSONException) {
+                            } catch (e: Exception) {
                                 e.printStackTrace()
-                                activity!!.runOnUiThread {
+                                requireActivity().runOnUiThread {
                                     Toast.makeText(context, "Failed to upload to Google Calendar", Toast.LENGTH_SHORT).show()
                                 }
                             }
-                        }
-                    })
+                        }.start()
+                    }
+                    // Get access token from OAuth server
+                    else {
+                        Log.d(TAG, "${loggedInAccount.displayName}|${loggedInAccount.email}|${serverAuthCode}")
+
+                        // Get access token from serverauthcode
+                        val client = OkHttpClient()
+                        val requestBody: RequestBody = FormEncodingBuilder()
+                            .add("grant_type", "authorization_code")
+                            .add(
+                                "client_id",
+                                getString(R.string.default_web_client_id)
+                            )
+                            .add(
+                                "client_secret",
+                                "0we2thAgoBHrYqbozOjT-3AI"
+                            )
+                            .add("redirect_uri", "")
+                            .add("code", serverAuthCode)
+                            .add("id_token", idToken)
+                            .build()
+                        val request: Request = Request.Builder()
+                            .url("https://www.googleapis.com/oauth2/v4/token")
+                            .post(requestBody)
+                            .build()
+                        client.newCall(request).enqueue(object : Callback {
+                            override fun onFailure(request: Request?, e: IOException) {
+                                Log.e(TAG, e.toString())
+                                Toast.makeText(context, "Failed to upload to Google Calendar", Toast.LENGTH_SHORT).show()
+                            }
+
+                            @Throws(IOException::class)
+                            override fun onResponse(response: Response) {
+                                try {
+                                    val jsonObject = JSONObject(response.body().string())
+                                    val message: String = jsonObject.toString(5)
+                                    Log.i(TAG, message)
+                                    // Save access token to userPreferences
+                                    val accessToken = jsonObject.getString("access_token")
+                                    userPreferences.saveStringPreferences("accessToken", accessToken)
+
+                                    Log.d(TAG, accessToken.toString())
+                                    val credential = GoogleCredential().setAccessToken(accessToken)
+
+                                    val service = com.google.api.services.calendar.Calendar.Builder(NetHttpTransport(), JacksonFactory(), credential)
+                                        .setApplicationName("Teamwork")
+                                        .build()
+                                    /*
+                                    val service = Tasks.Builder(NetHttpTransport(), JacksonFactory(), credential)
+                                        .setApplicationName("Teamwork")
+                                        .build()
+
+                                     */
+
+                                    // Network requests cannot run on main UI thread, so we create a Worker thread.
+                                    Thread {
+                                        try {
+                                            // Instantiate a new Task for Task API
+                                            val newEvent = Event()
+                                            newEvent.summary = task.name
+                                            newEvent.start = EventDateTime().setDateTime(DateTime(task.dueDate))
+                                            newEvent.end = EventDateTime().setDateTime(DateTime(task.dueDate))
+
+                                            service.Events().insert("primary", newEvent).execute()
+                                            activity!!.runOnUiThread {
+                                                Toast.makeText(context, "Successfully added to Google Calendar", Toast.LENGTH_SHORT).show()
+                                            }
+
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                            activity!!.runOnUiThread {
+                                                Toast.makeText(context, "Failed to upload to Google Calendar", Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                    }.start()
+
+                                } catch (e: JSONException) {
+                                    e.printStackTrace()
+                                    activity!!.runOnUiThread {
+                                        Toast.makeText(context, "Failed to upload to Google Calendar", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        })
+                    }
                 }
             }
         }
