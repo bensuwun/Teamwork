@@ -5,7 +5,17 @@ import android.os.Parcelable
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ParcelableDocumentReference(var collectionName: String, var documentId: String) : Parcelable {
+class ParcelableDocumentReference : Parcelable {
+
+    var collectionName: String = ""
+    var documentId: String = ""
+
+    constructor()
+
+    constructor(collectionName: String, documentId: String) {
+        this.collectionName = collectionName
+        this.documentId = documentId
+    }
 
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(), parcel.readString().toString()

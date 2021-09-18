@@ -22,6 +22,7 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.client.util.DateTime
 import com.google.api.services.tasks.Tasks
+import com.google.api.services.tasks.TasksScopes
 import com.google.api.services.tasks.model.TaskList
 import com.squareup.okhttp.*
 import org.json.JSONArray
@@ -325,7 +326,7 @@ class SpecificTaskView: Fragment() {
 
             R.id.option_upload -> {
                 // Obtain the Google Sign In Account
-                val loggedInAccount = GoogleSignIn.getLastSignedInAccount(activity)
+                var loggedInAccount = GoogleSignIn.getLastSignedInAccount(activity)
                 val serverAuthCode = loggedInAccount.serverAuthCode
 
                 if (serverAuthCode == null) {
@@ -344,6 +345,10 @@ class SpecificTaskView: Fragment() {
                     // Build the tasks service
                     Log.d(TAG, "${loggedInAccount.displayName}|${loggedInAccount.email}|${loggedInAccount.serverAuthCode}")
 
+                    // Request additional scope
+                    loggedInAccount = GoogleSignIn.getAccountForScopes(requireContext(), Scope(TasksScopes.TASKS))
+
+
                     // Get access token from serverauthcode
                     val client = OkHttpClient()
                     val requestBody: RequestBody = FormEncodingBuilder()
@@ -357,7 +362,7 @@ class SpecificTaskView: Fragment() {
                             "0we2thAgoBHrYqbozOjT-3AI"
                         )
                         .add("redirect_uri", "")
-                        .add("code", serverAuthCode)
+                        .add("code", loggedInAccount.serverAuthCode)
                         .add("id_token", loggedInAccount.idToken)
                         .build()
                     val request: Request = Request.Builder()

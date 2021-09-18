@@ -12,6 +12,7 @@ class Post() : Parcelable{
     @DocumentId
     var docId : String = ""
     var author : User = User()
+    var authorUid : String = ""
     var title : String = ""
     var description : String = ""
     var tags : Tags = Tags()
@@ -22,6 +23,7 @@ class Post() : Parcelable{
     constructor(parcel: Parcel) : this() {
         docId = parcel.readString().toString()
         author = parcel.readParcelable(User::class.java.classLoader)!!
+        authorUid = parcel.readString().toString()
         title = parcel.readString().toString()
         description = parcel.readString().toString()
         tags = parcel.readParcelable(Tags::class.java.classLoader)!!
@@ -30,8 +32,10 @@ class Post() : Parcelable{
         date_posted = parcel.readParcelable(Timestamp::class.java.classLoader)!!
     }
 
+
     constructor(
         author: User,
+        authorUid: String,
         title: String,
         description: String,
         likes: Long,
@@ -39,6 +43,7 @@ class Post() : Parcelable{
         date_posted: Timestamp
     ) : this() {
         this.author = author
+        this.authorUid = authorUid
         this.title = title
         this.description = description
         this.likes = likes
@@ -49,6 +54,7 @@ class Post() : Parcelable{
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(docId)
         parcel.writeParcelable(author, flags)
+        parcel.writeString(authorUid)
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeParcelable(tags, flags)

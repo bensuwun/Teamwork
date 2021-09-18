@@ -15,9 +15,11 @@ import androidx.navigation.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.tasks.RuntimeExecutionException
+import com.google.api.services.calendar.CalendarScopes
 import com.google.api.services.tasks.TasksScopes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -85,8 +87,8 @@ class Login : Fragment() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
-            //.requestScopes(Scope(TasksScopes.TASKS))
-            //.requestServerAuthCode(getString(R.string.default_web_client_id))
+            .requestScopes(Scope(CalendarScopes.CALENDAR))
+            .requestServerAuthCode(getString(R.string.default_web_client_id))
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this.parentActivity, gso)

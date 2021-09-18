@@ -12,6 +12,7 @@ import com.google.firebase.firestore.Query
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Comment
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Post
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Tags
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.User
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.posts.AddGuildPostFragment
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.ui.home.guilds.posts.ViewPostFragment
 import java.util.ArrayList
@@ -49,9 +50,33 @@ class PostDAO(context : Context) : TeamworkFirestoreDAO() {
                         document.toObject(Post::class.java)?.let { it1 -> posts.add(it1) }
                     }
 
-                    bundle.putParcelableArrayList("posts", posts)
-                    intent.putExtras(bundle)
-                    broadcastManager.sendBroadcast(intent)
+                    val userDAO = UserDAO()
+
+                    // Get the user document for each post
+                    Thread {
+                        try{
+                            for(post in posts) {
+                                Log.d(TAG, "Querying: ${post.authorUid}")
+                                userDAO.getUserByAuthId(post.authorUid) { success ->
+                                    if(success) {
+                                        val user = userDAO.document as User
+                                        post.author = user
+                                    }
+                                }
+                            }
+
+                            Log.d(TAG, "WARNING WARNING WARNING")
+                            bundle.putParcelableArrayList("posts", posts)
+                            intent.putExtras(bundle)
+                            broadcastManager.sendBroadcast(intent)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+
+
+
+                    }.start()
+
                 }
                 .addOnFailureListener {
                     Log.e(TAG, "Something went wrong when querying the guild posts")

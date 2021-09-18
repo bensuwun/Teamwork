@@ -70,6 +70,15 @@ class UserDAO(): TeamworkFirestoreDAO() {
     }
 
     /**
+     * Get User Reference by AuthUid
+     * @param authId The user's Firebase Auth ID
+     */
+    fun getUserRefByAuthId(authId: String) : DocumentReference {
+        return fireStoreDB.collection(fireStoreCollection)
+            .document(authId)
+    }
+
+    /**
      * Build Hash Map
      * @description This method generates the Java HashMap that firebase expects
      * as the document for the firestore database.

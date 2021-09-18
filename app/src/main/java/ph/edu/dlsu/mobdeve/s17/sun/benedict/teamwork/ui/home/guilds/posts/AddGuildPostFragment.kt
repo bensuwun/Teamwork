@@ -16,11 +16,9 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.Timestamp
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.R
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.PostDAO
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.dao.UserDAO
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.databinding.FragmentAddGuildPostBinding
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Guild
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Post
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.Tags
-import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.User
+import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.model.*
 import ph.edu.dlsu.mobdeve.s17.sun.benedict.teamwork.utils.UserPreferences
 import java.util.*
 
@@ -89,6 +87,7 @@ class AddGuildPostFragment : Fragment() {
 
                     newPost.title = title
                     newPost.author = userPreferences.getLoggedInUser()!!
+                    newPost.authorUid = userPreferences.getLoggedInUser()!!.authUid
                     newPost.description = description
                     newPost.likes = 0
                     newPost.comments = 0
