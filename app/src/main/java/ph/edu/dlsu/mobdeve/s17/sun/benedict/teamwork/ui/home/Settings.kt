@@ -118,7 +118,7 @@ class Settings : Fragment() {
         Log.d("Settings:resetProfileImage", dlUrl)
         if(dlUrl.isEmpty()) return
 
-        val storageReference = this.firebaseStorage.getReference(dlUrl)
+        val storageReference = this.firebaseStorage.getReferenceFromUrl(dlUrl)
         storageReference.getBytes(1024*1024*15)
             .addOnSuccessListener {
                 val bmp = BitmapFactory.decodeByteArray(it, 0, it.size)
@@ -162,18 +162,19 @@ class Settings : Fragment() {
                             }
                             .addOnSuccessListener { taskSnapshot -> // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                 val user = UserPreferences(requireContext()).getLoggedInUser()!!
-                                user.profileImage = referencePath
-
-                                // Update user information
-                                val userDAO = UserDAO()
-                                userDAO.document = user
-                                userDAO.updateDocument(user.authUid) {
-                                    // If successful, update UserPreferences
-                                    if(it) {
-                                        UserPreferences(requireContext()).saveLoggedInUser(user)
-                                        resetProfileImage()
+                                newBitmapPath.downloadUrl.addOnSuccessListener {
+                                    // Update user information
+                                    user.profileImage = it.toString()
+                                    val userDAO = UserDAO()
+                                    userDAO.document = user
+                                    userDAO.updateDocument(user.authUid) {
+                                        // If successful, update UserPreferences
+                                        if(it) {
+                                            UserPreferences(requireContext()).saveLoggedInUser(user)
+                                            resetProfileImage()
+                                        }
+                                        else { Toast.makeText(requireContext(), "Failed to update profile uri!", Toast.LENGTH_LONG).show() }
                                     }
-                                    else { Toast.makeText(requireContext(), "Failed to update profile uri!", Toast.LENGTH_LONG).show() }
                                 }
                             }
 
@@ -203,18 +204,19 @@ class Settings : Fragment() {
                         }
                         .addOnSuccessListener { taskSnapshot -> // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                             val user = UserPreferences(requireContext()).getLoggedInUser()!!
-                            user.profileImage = referencePath
-
-                            // Update user information
-                            val userDAO = UserDAO()
-                            userDAO.document = user
-                            userDAO.updateDocument(user.authUid) {
-                                // If successful, update UserPreferences
-                                if(it) {
-                                    UserPreferences(requireContext()).saveLoggedInUser(user)
-                                    resetProfileImage()
+                            newBitmapPath.downloadUrl.addOnSuccessListener {
+                                // Update user information
+                                user.profileImage = it.toString()
+                                val userDAO = UserDAO()
+                                userDAO.document = user
+                                userDAO.updateDocument(user.authUid) {
+                                    // If successful, update UserPreferences
+                                    if(it) {
+                                        UserPreferences(requireContext()).saveLoggedInUser(user)
+                                        resetProfileImage()
+                                    }
+                                    else { Toast.makeText(requireContext(), "Failed to update profile uri!", Toast.LENGTH_LONG).show() }
                                 }
-                                else { Toast.makeText(requireContext(), "Failed to update profile uri!", Toast.LENGTH_LONG).show() }
                             }
                         }
                 }
